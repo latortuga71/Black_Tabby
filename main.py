@@ -91,17 +91,6 @@ async def check_in(check_in_result:CheckIn_Info,background_tasks: BackgroundTask
 		print("PowerShell Command Sent...")
 		return test_command
 
-	elif check_in_dict["OS"] == "MACOS":
-		send = {"url":"http://127.0.0.1/test.sh"}
-		print("Sent bash command")
-		return send
-
-	elif check_in_dict['OS'] == "Linux":
-		test_command = {"bash":'''curl -s http://127.0.0.1/test.sh''' }
-		return test_command
-
-	else:
-		return {"Error":"OS Not detected"}
 	
 	return {"test"} # end of checkin function
 
