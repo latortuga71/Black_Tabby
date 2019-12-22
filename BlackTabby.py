@@ -6,6 +6,7 @@ from colorama import Fore, Back, Style
 from PyInquirer import style_from_dict, Token, prompt, Separator
 from examples import custom_style_2,custom_style_1,custom_style_3
 import sys
+from shell import MyPrompt
 
 class Client(object):
 
@@ -141,7 +142,32 @@ class Client(object):
 	def cmd_slave(self):
 		self.list_slaves()
 		print(self.agent_list)
-		
+		print(type(self.agent_list))
+		questions = [{'type':'list','name':'agent_listing','message':'choose agent','choices':self.agent_list}]	
+		answers = prompt(questions,style=custom_style_3)
+		print(answers)
+		self.agent_id = answers['agent_listing']
+		self.controlling_agent(self.agent_id)
+		return self.agent_id
+
+
+	def controlling_agent(self,agent_id):
+		print(agent_id)
+		Shell().cmdloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 	def dump_db(self):

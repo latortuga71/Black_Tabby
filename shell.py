@@ -2,22 +2,8 @@ from cmd import Cmd
 from colorama import Fore, Back, Style
 import pyfiglet
 
-
-def banner():
-    print("\n\n")
-    result = pyfiglet.figlet_format("Black", font = "gothic") # lean/alligator/hollywood/gothic
-    print(Fore.RED + result)
-    print(Style.RESET_ALL)
-
-def banner2():
-    result2 = pyfiglet.figlet_format("Tabby", font = "gothic")
-    print(Fore.RED + result2)
-    print(Style.RESET_ALL)
-
-
-
-class MyPrompt(Cmd):
-    prompt = 'BlackTabby# '
+class Shell(Cmd):
+    prompt = 'BlackTabby> '
     intro = "Welcome! Type ? to list commands"
 
     def do_exit(self, inp):
@@ -42,7 +28,7 @@ class MyPrompt(Cmd):
     do_EOF = do_exit
     help_EOF = help_exit
 
-if __name__ == '__main__':
-    banner()
-    banner2()
-    MyPrompt().cmdloop()
+#if __name__ == '__main__':
+#    banner()
+#    banner2()
+#    MyPrompt().cmdloop()
