@@ -8,7 +8,6 @@ from examples import custom_style_2,custom_style_1,custom_style_3
 import sys
 from shell import Shell
 
-
 class Client(object):
 
 	def banner(self):
