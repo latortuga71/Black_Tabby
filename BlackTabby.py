@@ -6,7 +6,8 @@ from colorama import Fore, Back, Style
 from PyInquirer import style_from_dict, Token, prompt, Separator
 from examples import custom_style_2,custom_style_1,custom_style_3
 import sys
-from shell import MyPrompt
+from shell import Shell
+
 
 class Client(object):
 
@@ -101,6 +102,7 @@ class Client(object):
 	    return answers
 
 	def create_view(self):
+		## TO DO CREATE VIEW AUTOMATICALLY IF DOESNT EXIST
 		#curl -X PUT http://admin:admin@127.0.0.1:5984/pwned/_design/list_agents --data-binary @doc_view.js
 		#curl http://admin:admin@127.0.0.1:5984/pwned/_design/list_agents/_view/agent
 		print("create view if doesnt exist")
@@ -153,7 +155,10 @@ class Client(object):
 
 	def controlling_agent(self,agent_id):
 		print(agent_id)
-		Shell().cmdloop()
+		shell = Shell()
+		shell.agent_id = agent_id
+		shell.db_connection = self.db
+		shell.cmdloop()
 
 
 
