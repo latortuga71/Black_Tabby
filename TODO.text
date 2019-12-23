@@ -1,0 +1,5 @@
+need to recreate current agent.py file
+and make that in fastapi so that the agents written in C or C# or powershell 
+are simpler and make simple post requests to fastapi, fastapi will handle all the changing of data in the database
+and the agents will just get responses with the current state of the document
+fast api should also handle initial authentication then hand out JWT tokens for subsiquent requests

@@ -22,16 +22,6 @@ class Client(object):
 		print(Fore.RED + result2)
 		print(Style.RESET_ALL)
 
-	'''
-	    def connect_db(self):
-	        self.couchserver = couchdb.Server("http://{}:{}@{}".format(self.username,self.passw,self.server_addr))
-	        if (self.couchserver):
-	            print("Connection Success")
-	            self.db = self.couchserver['pwned']
-	            if (self.db):
-	                print("Connected to pwned DB...Ready to send initial check in")
-
-	'''
 
 	def connect_database(self):
 		questions = [
@@ -93,6 +83,7 @@ class Client(object):
 	            'choices': [
 	                'List Agents',
 	                'Connect To Agent',
+	                'Delete Agent',
 	                'Dump DB',
 	                'Exit'
 	            ]
@@ -116,7 +107,8 @@ class Client(object):
 	    switcher = {
 	        "List Agents": self.list_slaves,
 	        "Connect To Agent": self.cmd_slave,
-	        "Dump DB": self.dump_db,
+	        "Delete Agent": self.del_agent,
+	        "Wipe DB": self.dump_db,
 	        "Exit": self.exit
 	    }
 	    # Get the function from switcher dictionary
@@ -129,28 +121,36 @@ class Client(object):
 		print(Style.RESET_ALL)
 		counter = 0
 		self.agent_list = []
-		for x in self.db.view('list_agents/agent'):
-			counter +=1
-			self.agent_list.append(x.id)
-			y = x.value
-			ip = json.loads(y['IP'])
-			print(Fore.YELLOW +"### ===========  #{} ============ ###".format(counter))
-			print(Fore.YELLOW + "ID: ",x.id)
-			print(Fore.YELLOW +"IP: ",ip['ip'])
-			print(Fore.YELLOW+ "OS: ",y['OS'])
-		print(Style.RESET_ALL)
+		if self.db.view('list_agents/agent'):
+			for x in self.db.view('list_agents/agent'):
+				counter +=1
+				self.agent_list.append(x.id)
+				y = x.value
+				ip = json.loads(y['IP'])
+				print(Fore.YELLOW +"### ===========  #{} ============ ###".format(counter))
+				print(Fore.YELLOW + "ID: ",x.id)
+				print(Fore.YELLOW +"IP: ",ip['ip'])
+				print(Fore.YELLOW+ "OS: ",y['OS'])
+			print(Style.RESET_ALL)
+			return True
+		else:
+			print(Fore.YELLOW + "*** No Agents Available ***")
+			print(Style.RESET_ALL)
+			return False
 			
 
 	def cmd_slave(self):
-		self.list_slaves()
-		print(self.agent_list)
-		print(type(self.agent_list))
-		questions = [{'type':'list','name':'agent_listing','message':'choose agent','choices':self.agent_list}]	
-		answers = prompt(questions,style=custom_style_3)
-		print(answers)
-		self.agent_id = answers['agent_listing']
-		self.controlling_agent(self.agent_id)
-		return self.agent_id
+		if self.list_slaves():		
+			print(self.agent_list)
+			print(type(self.agent_list))
+			questions = [{'type':'list','name':'agent_listing','message':'choose agent','choices':self.agent_list}]	
+			answers = prompt(questions,style=custom_style_3)
+			print(answers)
+			self.agent_id = answers['agent_listing']
+			self.controlling_agent(self.agent_id)
+			return self.agent_id
+		else:
+			return
 
 
 	def controlling_agent(self,agent_id):
@@ -170,13 +170,11 @@ class Client(object):
 
 
 
-
-
-
-
+	def del_agent(self):
+		print("delete one agent")
 
 	def dump_db(self):
-		print("dumping database")
+		print("deleting database")
 
 	def exit(self):
 		print(Style.RESET_ALL)

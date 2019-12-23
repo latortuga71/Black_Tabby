@@ -28,9 +28,25 @@ class Shell(Cmd):
         document = dict(db[agent])
         print(json.dumps(document,sort_keys=True,indent=4))
 
-    def export_json(self,filepath):
+    def help_get_all(self):
         print(Style.RESET_ALL)
+        print(Fore.YELLOW + "Gets all the database information on the current agent.")
+        print(Style.RESET_ALL)
+
+
+    def help_export_json(self):
+        print(Style.RESET_ALL)
+        print(Fore.YELLOW + "Write agent information to file path specified Ex. export_json /tmp/output.json")
+        print(Style.RESET_ALL)
+
+
+    def do_export_json(self,filepath):
+        print(Style.RESET_ALL)
+        doc = str(self.db_connection[self.agent_id])
         print("export json output to file path")
+        with open(filepath,'w') as f:
+            f.write(doc)
+        f.close()
         
 
     def do_execute(self,command):
@@ -45,7 +61,7 @@ class Shell(Cmd):
         print(Style.RESET_ALL)
         for x in range(0,15):
             sleep(1)
-            print(".")
+            print(".",end=" ")
         newdoc = dict(db[agent])
         if command not in newdoc['pending_commands']:
             print(Fore.GREEN + "Successfuly executed command")
@@ -61,6 +77,10 @@ class Shell(Cmd):
         print(Fore.YELLOW + str(newdoc['completed_commands'][index]))
         print(Style.RESET_ALL)
 
+    def help_execute(self):
+        print(Style.RESET_ALL)
+        print(Fore.YELLOW + "Ex. execute pwd ")
+        print(Style.RESET_ALL)
 
 
 

