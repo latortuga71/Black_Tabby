@@ -107,8 +107,8 @@ def first_checkin():
 @jwt_refresh_token_required
 def refresh():
 	agent_id= get_jwt_identity()
-	new_token = {create_access_token(identity=agent_id)}
-	return jsonify(new_token)
+	new_token = create_access_token(identity=agent_id)
+	return jsonify({'token':new_token})
 
 
 

@@ -5,9 +5,8 @@ import json
 from time import sleep
 
 class Shell(Cmd):
-    prompt = Fore.RED + 'BlackTabby> '
-    intro = Fore.BLUE + "Welcome! Type ? to list commands"
-
+    prompt = 'BlackTabby>'
+    intro = 'Welcome! Type ? to list commands'
 
 
     def do_exit(self, inp):

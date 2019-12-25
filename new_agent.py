@@ -43,22 +43,27 @@ class Agent(object):
 			try:
 				result = subprocess.run(cmd_split,capture_output=True)
 				self.cmd_result = {self.cmd:result.stdout.decode("utf-8")}
-				return True
+				try:
+					### Requesting new token ###
+					refresh_header = {"Authorization":"Bearer {}".format(self.refresh_token)}
+					resp = requests.request("GET",self.url + "refresh",headers=refresh_header)
+					resp = resp.json()
+					self.access_token = resp['token'] ## new token
+					return True
+				except:
+					print("couldnt refresh token")
+					return False
 			except:
 				self.cmd_result = {self.cmd:"Error running command"}
 				return True
 		else:
 			print("no command")
+			### Requesting new token ###
+			refresh_header = {"Authorization":"Bearer {}".format(self.refresh_token)}
+			resp = requests.request("GET",self.url + "refresh",headers=refresh_header)
+			resp = resp.json()
+			self.access_token = resp['token'] ## new token
 			return False
-
-
-
-
-
-
-
-
-
 
 
 	def post_complete_command(self):
@@ -72,8 +77,13 @@ class Agent(object):
 		print("completed post to database")
 
 
-
-
+	def refresh_token(self):
+		refresh_header = {"Authorization":"Bearer {}".format(self.refresh_token)}
+		refresh_url = self.url + "refresh"
+		resp = requests.request("GET",refresh_url,headers=refresh_header)
+		resp_json = resp.json()
+		print(resp_json['token'])
+		return resp_json['token']
 
 
 	def main(self):
