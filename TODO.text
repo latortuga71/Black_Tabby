@@ -5,9 +5,9 @@ working cli that communicates to database and allows execution of commands
 
 
 ##### TO DO ####
-Create Bash Setup Script To Run Docker and create initial admin password
-Then it tells you to run black tabby cli pythons script to create database and view
-Then it runs flask server for you
+Create Bash Setup Script To Run Docker and create initial admin password -> setup.sh 
+Then it tells you to run black tabby cli pythons script to create database and view -> have blacktabby start flask in the background
+Then it runs flask server for you -> have blacktabby start flask in the background
 Add Persistence to agent.
 Remove printing of output on agent and server
 Make Python Agent an ELF Binary with Pyinstaller
