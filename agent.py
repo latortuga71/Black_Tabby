@@ -18,7 +18,7 @@ class Json_Format(BaseModel):
     pending_commands:list
     enslaved_time: datetime 
 
-class Slave(object):
+class Slave(object): 
     username = "admin"
     passw = "admin"
     server_addr = "127.0.0.1:5984"

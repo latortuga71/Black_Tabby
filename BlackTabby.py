@@ -124,12 +124,13 @@ class Client(object):
 			for x in self.db.view('list_agents/agent'):
 				counter +=1
 				self.agent_list.append(x.id)
-				y = x.value
-				ip = json.loads(y['IP'])
+				#y = x.value 
+				print(x.value) 
+				#ip = json.loads(y['IP'])
 				print(Fore.YELLOW +"### ===========  #{} ============ ###".format(counter))
 				print(Fore.YELLOW + "ID: ",x.id)
-				print(Fore.YELLOW +"IP: ",ip['ip'])
-				print(Fore.YELLOW+ "OS: ",y['OS'])
+				print(Fore.YELLOW +"IP: ",x.value['IP'])
+				print(Fore.YELLOW+ "OS: ",x.value['OS']) 
 			print(Style.RESET_ALL)
 			return True
 		else:
