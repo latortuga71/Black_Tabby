@@ -1,3 +1,5 @@
 dockerd
-docker run -p 127.0.0.1:5984:5984 couchdb
-
+docker run --name cat_on_couch -d -p 127.0.0.1:5984:5984 couchdb
+docker kill cat_on_couch
+docker start cat_on_couch
+docker rm cat_on_couch

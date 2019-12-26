@@ -24,10 +24,10 @@ def gen_refresh_token(agent_id):
 	return refresh_token
 
 def connect_db():
-	dbuser = "admin"
-	dbpass = "admin"
-	db_ip = "127.0.0.1"
-	db_port = "5984"
+	dbuser = sys.argv[1]
+	dbpass = sys.argv[2]
+	db_ip = sys.argv[3]
+	db_port = sys.argv[4]
 	try:
 	  couchserver = couchdb.Server("http://{}:{}@{}:{}".format(dbuser,dbpass,db_ip,db_port))
 	  db_connection = couchserver['pwned']
@@ -115,7 +115,7 @@ def refresh():
 
 
 
-app.run(debug=True,port=9000)
+app.run(debug=True,port=9000,ssl_context='adhoc')
 #ssl_context='adhoc'
 
 

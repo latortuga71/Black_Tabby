@@ -2,14 +2,14 @@
 agent blue print
 flask server that handles requests to the database and takes care of tokens
 working cli that communicates to database and allows execution of commands
-
-
-##### TO DO ####
 Create Bash Setup Script To Run Docker and create initial admin password -> setup.sh 
 Then it tells you to run black tabby cli pythons script to create database and view -> have blacktabby start flask in the background
 Then it runs flask server for you -> have blacktabby start flask in the background
+
+##### TO DO ####
 Add Persistence to agent.
 Remove printing of output on agent and server
 Make Python Agent an ELF Binary with Pyinstaller
 Create Agent in C that mirrors Python Agent
 Create Powershell or C# Agent that mirrors Python Agent
+Add DNS Functionality
