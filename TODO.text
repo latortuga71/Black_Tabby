@@ -7,6 +7,7 @@ Then it tells you to run black tabby cli pythons script to create database and v
 Then it runs flask server for you -> have blacktabby start flask in the background
 
 ##### TO DO ####
+currently working on C agent need to add json parser using json-c library
 Add Persistence to agent.
 Remove printing of output on agent and server
 Make Python Agent an ELF Binary with Pyinstaller

