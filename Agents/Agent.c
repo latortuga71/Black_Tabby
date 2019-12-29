@@ -15,6 +15,7 @@ char *document_os;
 char *document_agent_id;
 char *document_rev;
 char *document_user;
+char pending_commands_array[10][100]; //multidimensional array used incase there are multiple commands pending
 // json variables for tokens recieved from initial check in 
 struct json_object *parsed_json;
 struct json_object *token;
@@ -47,7 +48,7 @@ char *first_check_in_callback(void *ptr, size_t size, size_t nmemb, void *stream
 }
 
 void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
-    polling_response = malloc(nmemb * 10);
+    polling_response = malloc(nmemb);
     strncpy(polling_response,ptr,nmemb);
     printf("%s\n",polling_response);
     if (polling_response){
@@ -68,8 +69,20 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     	document_os = json_object_get_string(os);
     	document_ip = json_object_get_string(ip);
     	document_user = json_object_get_string(user);
-    	if (json_object_array_get_idx(pending_commands,0)) // this works as the check to see if there is a pending commands or not
+    	n_pen_comm = json_object_array_length(pending_commands);
+    	if (json_object_array_get_idx(pending_commands,0)){ // this works as the check to see if there is a pending commands or not
     		puts("Exists");
+    		int i;
+    		printf("%lu\n",n_pen_comm);
+    		for (i = 0; i < n_pen_comm; i++){
+    			each_command_in_pending = json_object_array_get_idx(pending_commands,i);
+    			puts("Successfully added following command to an array\n");
+    			printf("%s\n",json_object_get_string(each_command_in_pending));
+
+    		}
+
+    	}
+
     	else
     		puts("no commands");
     	//printf("%s\n",test );
