@@ -68,7 +68,12 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     	document_os = json_object_get_string(os);
     	document_ip = json_object_get_string(ip);
     	document_user = json_object_get_string(user);
-    	n_pen_comm = json_object_array_length(pending_commands);
+    	if (json_object_array_get_idx(pending_commands,0)) // this works as the check to see if there is a pending commands or not
+    		puts("Exists");
+    	else
+    		puts("no commands");
+    	//printf("%s\n",test );
+    	//n_pen_comm = json_object_array_length(pending_commands);
     	// currently stuck at this point trying to validate if the array is empty or not
 
     	//n_pen_comm = json_object_array_length(pending_commands);
@@ -206,6 +211,7 @@ int main(void){
 	// saving access token as a string
 	printf("Successfully Completed Check In\n");
 	printf("Successfully Extracted first response into variables\n");
+	sleep(20);
 	polling(document_id,access_token);
 	//printf("%s\n",polling_response);
 
