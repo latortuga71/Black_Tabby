@@ -42,7 +42,7 @@ class Agent(object):
 		response_json = dict(response.json())
 		print(response_json)
 		self.updated_payload = response_json
-		if response_json['pending_commands']:
+		if response_json['pending_commands']: 
 			self.cmd = response_json['pending_commands'][0]
 			cmd_split = self.cmd.split(" ")
 			try:
