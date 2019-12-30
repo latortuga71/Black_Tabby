@@ -15,7 +15,8 @@ char *document_os;
 char *document_agent_id;
 char *document_rev;
 char *document_user;
-char pending_commands_array[10][100]; //multidimensional array used incase there are multiple commands pending
+char *pending_commands_array[10]; //multidimensional array used incase there are multiple commands pending
+char **ptr_pending_comm_array = pending_commands_array;
 // json variables for tokens recieved from initial check in 
 struct json_object *parsed_json;
 struct json_object *token;
@@ -75,16 +76,20 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     		int i;
     		printf("%lu\n",n_pen_comm);
     		for (i = 0; i < n_pen_comm; i++){
-    			each_command_in_pending = json_object_array_get_idx(pending_commands,i);
-    			puts("Successfully added following command to an array\n");
-    			printf("%s\n",json_object_get_string(each_command_in_pending));
+    			ptr_pending_comm_array[i] = json_object_get_string(json_object_array_get_idx(pending_commands,i));
+    			puts("Successfully added following command to an array");
+    			printf("%s\n",ptr_pending_comm_array[i]);
 
     		}
+    		// at this point you have pending commands in an array
+    		// next step is to run the commands locally then get output save that to an array
+    		// recreate the json string and post it back to the server
 
     	}
 
     	else
-    		puts("no commands");
+    		puts("no commands\n");
+    		puts("GET REQUEST TO REFRESH TOKEN\n")
     	//printf("%s\n",test );
     	//n_pen_comm = json_object_array_length(pending_commands);
     	// currently stuck at this point trying to validate if the array is empty or not
