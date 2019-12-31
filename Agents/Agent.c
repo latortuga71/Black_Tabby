@@ -17,6 +17,7 @@ struct headers{
 char *first_response;
 char *polling_response;
 char *access_token;
+char *refresh_token;
 
 char *document_id;
 char *document_ip;
@@ -30,6 +31,7 @@ char *pending_commands_array[10]; //multidimensional array used incase there are
 char **ptr_pending_comm_array = pending_commands_array;
 char **command_output[100];
 // json variables for tokens recieved from initial check in 
+char *final_json;
 
 struct json_object *parsed_json;
 struct json_object *token;
@@ -194,8 +196,8 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     		json_object_object_add(post_object,"user", j_user);
     		json_object_object_add(post_object,"completed_commands", complete_comm_array);
     		json_object_object_add(post_object,"pending_commands",pend_array);
-    		printf ("The json object created: %s\n",json_object_to_json_string(post_object));
-
+    		//printf ("The json object created: %s\n",json_object_to_json_string(post_object));
+    		final_json = json_object_to_json_string(post_object);
 
 
 
@@ -220,6 +222,7 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     	else {
     		puts("no commands\n");
     		puts("GET REQUEST TO REFRESH TOKEN\n");
+    		final_json = "failed";
     	}
     	//printf("%s\n",test );
     	//n_pen_comm = json_object_array_length(pending_commands);
@@ -333,12 +336,48 @@ int polling(char *id,char *token){
 
 */
 
+//int final_post()
+
+int get_refresh_token(char * refresh,char *url){
+	CURL *curl;
+	CURLcode res;
+	//POST REQUEST
+	curl_global_init(CURL_GLOBAL_DEFAULT);
+	curl = curl_easy_init();
+	if (curl){
+		struct curl_slist *chunk = NULL;
+		//curl_easy_setopt(curl, CURLOPT_POST, 12L);
+		//curl_easy_setopt(curl, CURLOPT_POSTFIELDS, data);
+		/* Settings headers below */
+		//char header_doc[100] = "doc_id:";
+		char header_auth[300] = "Authorization:Bearer ";
+		//strcat(header_doc,id);
+		strcat(header_auth,refresh);
+		printf("%s\n",header_auth );
+		//printf("%s\n",header_doc );
+		chunk = curl_slist_append(chunk,header_auth);
+		//chunk = curl_slist_append(chunk,header_doc);
+		//chunk = curl_slist_append(chunk,"Agent:TGVhcm5pbmdDVG9CRWxpdGUK");
+		/////////////////////////////
+		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+		curl_easy_setopt(curl,CURLOPT_URL,url);
+		//curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, refresh_callback); // calls polling callback function
+		res = curl_easy_perform(curl);
+		if (res != CURLE_OK)
+			fprintf(stderr,"curl_easy_perform() failed : %s\n",curl_easy_strerror(res));
+		curl_easy_cleanup(curl);
+	}
+	curl_global_cleanup();
+}
 
 
 
 int main(void){
 	char *test_url = "https://localhost:9000/first_check_in";
 	char *polling_url = "https://localhost:9000/poll";
+	char *refresh_url = "https://localhost:9000/refresh";
 	first_check_in(test_url);
 	// setting up json
 	//printf("%s\n",first_response);
@@ -358,14 +397,20 @@ int main(void){
 	//printf("%s\n",json_object_get_string(token));
 	access_token = json_object_get_string(token);
 	document_id = json_object_get_string(id);
+	refresh_token = json_object_get_string(refresh);
 	// saving document id as a string
 	// saving access token as a string
 	printf("Successfully Completed Check In\n");
 	printf("Successfully Extracted first response into variables\n");
 	sleep(20);
 	polling(document_id,access_token);
-	//printf("%s\n",polling_response);
 
+	if (strcmp(final_json, "failed") == 0){
+		printf("getting refresh token\n");
+		get_refresh_token(refresh_token,refresh_url); // saving output to token global
+	}
+	else
+		printf("it worked\n%s\n",final_json);
 
 	return 0;
 
