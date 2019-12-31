@@ -57,6 +57,7 @@ char *run_command_return_ouput(char *cmd){
 	tmp = malloc(1024 * sizeof(char));
 	size_t n; // size for buffer
 	char *dest = malloc(1025 * sizeof(char));
+	char *fail_message = malloc(500 * sizeof(char));
 	FILE *ff = popen(cmd,"r");
 	if (ff == NULL){
 		printf("fail\n");
@@ -67,11 +68,22 @@ char *run_command_return_ouput(char *cmd){
 		strncat(dest,tmp,n);
 
 	}
-    if (pclose(ff) < 0)
+	int z = pclose(ff);
+    if (z < 0)
     	perror("pclose(3) error");
+    else if (z > 0){
+    	sprintf(fail_message,"failed to run command %s",cmd);
+    	return fail_message;
+    }
+    else
+    	return dest;
+
+
+    //if (pclose(ff) > 0)
+    //	printf("failed\n");
 
     //printf("%s\n",dest);
-    return dest;
+    //return dest;
 
 }
 
@@ -84,6 +96,7 @@ char *first_check_in_callback(void *ptr, size_t size, size_t nmemb, void *stream
     //printf("test\n");
     first_response = malloc(nmemb * 2);
     strncpy(first_response,ptr,nmemb);
+    //printf("%s\n",first_response);
     return first_response;
 }
 
@@ -93,11 +106,11 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     printf("%s\n",polling_response);
     if (polling_response){
     	parsed_json = NULL;
-    	rev = NULL;
+    	//rev = NULL;
     	parsed_json = json_tokener_parse(polling_response); 
     	// document id doesnt change so we dont need to get that value
     	//its a global variable
-    	json_object_object_get_ex(parsed_json,"rev",&rev);
+    	//json_object_object_get_ex(parsed_json,"rev",&rev);
     	json_object_object_get_ex(parsed_json,"agent_id",&agent_id);
     	json_object_object_get_ex(parsed_json,"completed_commands",&completed_commands);
     	json_object_object_get_ex(parsed_json,"ip",&ip);
@@ -126,11 +139,16 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
     		// next step is to run the commands locally then get output save that to an array
     		// recreate the json string and post it back to the server
     		//
+    		// setting up json array to hold output of completed commands
+    		json_object *complete_comm_array = json_object_new_array();
+    		json_object *pend_array = json_object_new_array();
     		while (ptr_pending_comm_array[x] != NULL){
     			// runs commands and puts the output in an array
     			puts(ptr_pending_comm_array[x]);
     			command_output[x] = run_command_return_ouput(ptr_pending_comm_array[x]);
     			puts(command_output[x]);
+    		 	json_object *jstring1 = json_object_new_string(command_output[x]);
+    		 	json_object_array_add(complete_comm_array,jstring1);
     			x++;
 
     		}
@@ -149,31 +167,33 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
 				char *document_pending;
 				char *document_complete;
 			*/
+			/*
     		printf("seeing if it gets this far %s\n",document_user);
     		printf("seeing if it gets this far %s\n",document_id);
     		printf("seeing if it gets this far %s\n",document_ip);
     		printf("seeing if it gets this far %s\n",document_os);
     		printf("seeing if it gets this far %s\n",document_agent_id);
-    		//printf("seeing if it gets this far %s\n",document_rev); // returning as null
+    		printf("seeing if it gets this far %s\n",document_rev); // 
+    		*/
     		//everything else is all good
     		json_object *post_object = json_object_new_object();
-    		//json_object *j_id = json_object_new_string(document_id);
-    		//json_object *j_ip = json_object_new_string(document_ip);
-    		//json_object *j_os = json_object_new_string(document_os);
-    		//json_object *j_agent = json_object_new_string(document_agent_id);
-    		//json_object *j_rev = json_object_new_string(document_rev);
-    		
-    		
-    		//missing pending command array and completed command array
+    		json_object *j_id = json_object_new_string(document_id);
+    		json_object *j_ip = json_object_new_string(document_ip);
+    		json_object *j_os = json_object_new_string(document_os);
+    		json_object *j_agent = json_object_new_string(document_agent_id);
+    		json_object *j_rev = json_object_new_string(document_rev);
     		json_object *j_user = json_object_new_string(document_user);
-    		
-    		//json_object_object_add(post_object,"_id", j_id);
-    		//json_object_object_add(post_object,"ip", j_ip);
-    		//json_object_object_add(post_object,"os", j_os);
-    		//json_object_object_add(post_object,"agent_id", j_agent);
-    		//json_object_object_add(post_object,"_rev", j_rev);
-    		//json_object_object_add(post_object,"user", j_user);
-    		
+    		//missing pending command array and completed command array
+    		//json_object *complete_comm_array = json_object_new_array();
+
+    		json_object_object_add(post_object,"_id", j_id);
+    		json_object_object_add(post_object,"ip", j_ip);
+    		json_object_object_add(post_object,"os", j_os);
+    		json_object_object_add(post_object,"agent_id", j_agent);
+    		json_object_object_add(post_object,"_rev", j_rev);
+    		json_object_object_add(post_object,"user", j_user);
+    		json_object_object_add(post_object,"completed_commands", complete_comm_array);
+    		json_object_object_add(post_object,"pending_commands",pend_array);
     		printf ("The json object created: %s\n",json_object_to_json_string(post_object));
 
 
