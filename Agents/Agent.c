@@ -150,23 +150,29 @@ void poll_callback(void *ptr, size_t size, size_t nmemb, void *stream){
 				char *document_complete;
 			*/
     		printf("seeing if it gets this far %s\n",document_user);
+    		printf("seeing if it gets this far %s\n",document_id);
+    		printf("seeing if it gets this far %s\n",document_ip);
+    		printf("seeing if it gets this far %s\n",document_os);
+    		printf("seeing if it gets this far %s\n",document_agent_id);
+    		//printf("seeing if it gets this far %s\n",document_rev); // returning as null
+    		//everything else is all good
     		json_object *post_object = json_object_new_object();
-    		json_object *j_id = json_object_new_string(document_id);
-    		json_object *j_ip = json_object_new_string(document_ip);
-    		json_object *j_os = json_object_new_string(document_os);
-    		json_object *j_agent = json_object_new_string(document_agent_id);
-    		json_object *j_rev = json_object_new_string(document_rev);
+    		//json_object *j_id = json_object_new_string(document_id);
+    		//json_object *j_ip = json_object_new_string(document_ip);
+    		//json_object *j_os = json_object_new_string(document_os);
+    		//json_object *j_agent = json_object_new_string(document_agent_id);
+    		//json_object *j_rev = json_object_new_string(document_rev);
     		
     		
     		//missing pending command array and completed command array
     		json_object *j_user = json_object_new_string(document_user);
     		
-    		json_object_object_add(post_object,"_id", j_id);
-    		json_object_object_add(post_object,"ip", j_ip);
-    		json_object_object_add(post_object,"os", j_os);
-    		json_object_object_add(post_object,"agent_id", j_agent);
-    		json_object_object_add(post_object,"_rev", j_rev);
-    		json_object_object_add(post_object,"user", j_user);
+    		//json_object_object_add(post_object,"_id", j_id);
+    		//json_object_object_add(post_object,"ip", j_ip);
+    		//json_object_object_add(post_object,"os", j_os);
+    		//json_object_object_add(post_object,"agent_id", j_agent);
+    		//json_object_object_add(post_object,"_rev", j_rev);
+    		//json_object_object_add(post_object,"user", j_user);
     		
     		printf ("The json object created: %s\n",json_object_to_json_string(post_object));
 
