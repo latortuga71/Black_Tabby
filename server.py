@@ -115,7 +115,7 @@ def refresh():
 
 
 
-app.run(debug=True,port=9000,ssl_context='adhoc')
+app.run(host='0.0.0.0',debug=True,port=9000,ssl_context='adhoc')
 #ssl_context='adhoc'
 
 
