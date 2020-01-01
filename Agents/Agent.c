@@ -410,6 +410,7 @@ int main(void){
 	//free(first_response);
 	parsed_json = json_tokener_parse(first_response); 
 	free(first_response);
+
 	// parsed json object
 	json_object_object_get_ex(parsed_json,"id",&id);
 	// getting each section of the json
@@ -428,6 +429,7 @@ int main(void){
 	// saving access token as a string
 	printf("Successfully Completed Check In\n");
 	printf("Successfully Extracted first response into variables\n");
+	while(1){
 	sleep(10);
 	polling(document_id,access_token);
 
@@ -436,8 +438,9 @@ int main(void){
 	else
 		printf("it worked\n%s\n",final_json);
 
-	return 0;
-
+	
+ }
+ return 0;
 }
 
 /* PAYLOAD AND HEADERS */
