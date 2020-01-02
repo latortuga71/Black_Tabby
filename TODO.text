@@ -9,8 +9,9 @@ created horrible c agent, using libcurl and json-c it works but its terrible
 
 
 ##### TO DO ####
-Create Powershell or C# Agent that mirrors Python Agent
-Create dropper powershell script/c# exe that downloads agent and adds Persistence to agent. => windows
+Create Powershell & C# Agent that mirrors Python Agent
+Create dropper exe that downloads agent and adds Persistence to agent. => windows
+Add jwt token secret key input to server.py and each agent has ip and port in cmd arguments instead of hardcoded.
 create dropper bash script that downloads python agent elf(compile with pyinstaller) and adds persistence to agent => linux
 Remove printing of output on agent and server
 Add DNS Functionality to agents
