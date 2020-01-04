@@ -9,6 +9,7 @@ created horrible c agent, using libcurl and json-c it works but its terrible
 
 
 ##### TO DO ####
+for all agents add initial shell commands that will be in original json document aka os user ip 
 for all agents add server ip and port its contacting as arguments (have setup.py explain this) so that ip and port arent hardcoded
 somehow encrypt login strings on agent and server decrypts them upon getting them, so that headers arent hardcoded into agents
 powershell agent remove print statements, add error checking, so far its working pretty decently
