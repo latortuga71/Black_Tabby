@@ -15,6 +15,9 @@ powershell agent remove print statements, add error checking, so far its working
 python agent remove print statements
 create C# agent 
 Create dropper (could be powershell/vbscript) that downloads agent and adds Persistence to agent via registry. => windows
+Create Powershell & C# Agent that mirrors Python Agent
+Create dropper exe that downloads agent and adds Persistence to agent. => windows
+Add jwt token secret key input to server.py and each agent has ip and port in cmd arguments instead of hardcoded.
 create dropper bash script that downloads python agent elf(compile with pyinstaller) and adds persistence to agent => linux
 Remove printing of output on agent and server
 Add DNS Functionality to agents
