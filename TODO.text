@@ -6,12 +6,11 @@ Create Bash Setup Script To Run Docker and create initial admin password -> setu
 Then it tells you to run black tabby cli pythons script to create database and view -> have blacktabby start flask in the background
 Then it runs flask server for you -> have blacktabby start flask in the background
 created horrible c agent, using libcurl and json-c it works but its terrible
+for all agents add initial shell commands that will be in original json document aka os user ip 
 
 
 ##### TO DO ####
-for all agents add initial shell commands that will be in original json document aka os user ip 
 powershell agent remove print statements, add error checking, so far its working pretty decently
-python agent remove print statements
 create C# agent 
 Create dropper (could be powershell/vbscript) that downloads agent and adds Persistence to agent via registry. => windows
 Create Powershell & C# Agent that mirrors Python Agent

