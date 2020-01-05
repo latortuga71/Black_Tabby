@@ -11,7 +11,7 @@ import datetime
 
 app = Flask(__name__)
 
-app.config['JWT_SECRET_KEY'] = 'dawoof7123'
+app.config['JWT_SECRET_KEY'] = sys.argv[5] # json web token is set in setup.sh
 jwt = JWTManager(app)
 
 

