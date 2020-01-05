@@ -7,13 +7,12 @@ Then it tells you to run black tabby cli pythons script to create database and v
 Then it runs flask server for you -> have blacktabby start flask in the background
 created horrible c agent, using libcurl and json-c it works but its terrible
 for all agents add initial shell commands that will be in original json document aka os user ip 
-
+powershell agent remove print statements, add error checking, so far its working pretty decently
+powershell is missing error checking but it seems to be working pretty fine so no need as c# should be main agent anyways.
 
 ##### TO DO ####
-powershell agent remove print statements, add error checking, so far its working pretty decently
 create C# agent 
 Create dropper (could be powershell/vbscript) that downloads agent and adds Persistence to agent via registry. => windows
-Create Powershell & C# Agent that mirrors Python Agent
 Create dropper exe that downloads agent and adds Persistence to agent. => windows
 Add jwt token secret key input to server.py
 create dropper bash script that downloads python agent elf(compile with pyinstaller) and adds persistence to agent => linux
