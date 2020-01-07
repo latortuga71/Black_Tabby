@@ -12,5 +12,5 @@ curl -X POST -H "Content-Type: application/json" http://localhost:5984/_cluster_
 echo "Run BlackTabby.py to create the DB and view and begin deploying agents"
 echo "When running the container next time use docker start cat_on_couch"
 echo "Starting Flask Server..."
-echo "Server.py will run with the following arguments Username: $CouchUser Pass: ##### IP: 127.0.0.1 Port: 5984 JWT SECRET KEY: dawoof7123
+echo "Server.py will run with the following arguments Username: $CouchUser Pass: ##### IP: 127.0.0.1 Port: 5984 JWT SECRET KEY: dawoof7123"
 python3 server.py $CouchUser $CouchPass 127.0.0.1 5984 dawoof7123

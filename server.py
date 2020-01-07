@@ -99,7 +99,8 @@ def first_checkin():
 	  doc_id, doc_rev = db_con.save(content) ## posting check in doc to database
 	  return jsonify({"id":doc_id,"rev":doc_rev,"refresh":refresh_token,"token":token}) # returns access token as awell as document id and doc rev to be used for updating
 
-	except:
+	except Exception as e:
+	  print("\n  {}  \n".format(e))
 	  return jsonify({"Error":"Missing Parameters"})
 
 
