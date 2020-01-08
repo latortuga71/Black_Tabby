@@ -9,17 +9,23 @@ created horrible c agent, using libcurl and json-c it works but its terrible
 for all agents add initial shell commands that will be in original json document aka os user ip 
 powershell agent remove print statements, add error checking, so far its working pretty decently
 powershell is missing error checking but it seems to be working pretty fine so no need as c# should be main agent anyways.
-
+create C# agent
+ 
 ##### TO DO ####
-create C# agent 
+have BlackTabby have a create agent option. where you can provide the type,ip and server
 Create dropper (could be powershell/vbscript) that downloads agent and adds Persistence to agent via registry. => windows
-Create dropper exe that downloads agent and adds Persistence to agent. => windows
 Add jwt token secret key input to server.py
 create dropper bash script that downloads python agent elf(compile with pyinstaller) and adds persistence to agent => linux
 Remove printing of output on agent and server
-have BlackTabby have a create agent option. where you can provide the type,ip and server
+Create dropper exe that downloads agent and adds Persistence to agent. => windows
 Add DNS Functionality to agents
 
 MAIN AGENTS WILL BE
 linux => python/python elf
 windows => powershell/C# exe
+
+### NOTES ####
+C# works but it compiles as an EXE, running it fileless via powershell might be more stealthy
+or as a dll perhaps(add a scheduled task maybe?)
+powershell agent can be run fileless via downloadString powershell commmand doesnt trigger antivirus (dropper adds persistence via registry perhaps)
+python agent can be converted to linux binary via pyinstaller (dropper bash script add to cron for persistence)
