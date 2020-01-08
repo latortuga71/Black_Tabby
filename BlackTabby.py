@@ -12,7 +12,8 @@ import time
 
 class Client(object):
 	def cat_banner(self):
-		print(Fore.RED + '''
+		print(Style.BRIGHT)
+		print(Fore.MAGENTA + '''
 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmhhyhdmNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNy:``  ``.+dNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNm/          .yNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
@@ -58,13 +59,24 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 			''')
 
 
-
+	def author(self):
+		print(Style.BRIGHT)
+		print(Fore.WHITE + '''
+		Tool	:: Black Tabby
+		Author  :: Latortuga71
+		Twitter :: @chriswoofmane
+		Blog    :: http://chrisja.info
+		Github  :: https://github.com/latortuga71/Black_Tabby
+		Version :: 1.0
+			''')
+		print(Style.RESET_ALL)
 
 
 	def banner(self):
 	    print("\n\n")
 	    result = pyfiglet.figlet_format("BlackTabby", font = "gothic") # lean/alligator/hollywood/gothic
-	    print(Fore.RED + result)
+	    print(Style.BRIGHT)
+	    print(Fore.MAGENTA + result)
 	    print(Style.RESET_ALL)
 
 	def connect_database(self):
@@ -97,31 +109,39 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 		print(Style.RESET_ALL)
 		self.couchserver = couchdb.Server("http://{}:{}@{}:{}".format(answers['username'],answers['password'],answers['ip'],answers['port']))
 		if (self.couchserver):
+			print(Style.BRIGHT)
 			print( Fore.GREEN + "*** Connection Success ***")
 			print(Style.RESET_ALL)
 		else:
+			print(Style.BRIGHT)
 			print(Fore.RED + "!!! Error Connecting to database confirm the couch db docker container is running !!!")
 			print(Style.RESET_ALL)
 			sys.exit(1)
 		if 'pwned' not in self.couchserver:
+			print(Style.BRIGHT)
 			print(Fore.RED + "*** Pwned database not found. ***")
 			print(Fore.RED + "*** Creating database now... ***")
 			print(Style.RESET_ALL)
 			self.couchserver.create('pwned')
+			print(Style.BRIGHT)
 			print(Fore.GREEN + "*** Successfully Created pwnd DB... ***")
 			print(Style.RESET_ALL)
 			self.db = self.couchserver['pwned']
+			print(Style.BRIGHT)
 			print(Fore.YELLOW + "Attempting to create view")
 			print(Style.RESET_ALL)
 			view = self.create_view(answers['username'],answers['password'],answers['ip'],answers['port'])
 			if view:
+				print(Style.BRIGHT)
 				print(Fore.GREEN + "*** Created View ***")
 				print(Style.RESET_ALL)
 			else:
+				print(Style.BRIGHT)
 				print(Fore.RED + "Failed to create View")
 				print(Style.RESET_ALL)
 
 		else:
+			print(Style.BRIGHT)
 			print(Fore.GREEN + "*** Success pwned DB Found ***")
 			print(Style.RESET_ALL)
 			self.db = self.couchserver['pwned']
@@ -177,7 +197,8 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 	    return func()
 
 	def list_slaves(self):
-		print(Fore.YELLOW + "*** Agent List ***")
+		print(Style.BRIGHT)
+		print(Fore.WHITE + "      ****** Agent List ******")
 		print(Style.RESET_ALL)
 		counter = 0
 		self.agent_list = []
@@ -186,8 +207,9 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 				counter +=1
 				self.agent_list.append(x.id)
 				#y = x.value 
-				print(x.value) 
+				#print(x.value) 
 				#ip = json.loads(y['IP'])
+				print(Style.BRIGHT)
 				print(Fore.YELLOW +"### ===========  #{} ============ ###".format(counter))
 				print(Fore.YELLOW + "ID: ",x.id)
 				print(Fore.YELLOW +"IP: ",x.value['IP'])
@@ -195,6 +217,7 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 			print(Style.RESET_ALL)
 			return True
 		else:
+			print(Style.BRIGHT)
 			print(Fore.YELLOW + "*** No Agents Available ***")
 			print(Style.RESET_ALL)
 			return False
@@ -256,6 +279,8 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 		cli.banner()
 		time.sleep(1)
 		cli.cat_banner()
+		time.sleep(1)
+		cli.author()
 		cli.connect_database()
 		while True:
 			self.answer = cli.MainMenuQuestions()

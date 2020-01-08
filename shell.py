@@ -20,6 +20,7 @@ class Shell(Cmd):
 
     def do_get_all(self, inp):
         print(Style.RESET_ALL)
+        print(Style.BRIGHT)
         print(Fore.YELLOW + "*** Fetching All Info On Agent ***")
         print(Style.RESET_ALL)
         db = self.db_connection
@@ -63,6 +64,7 @@ class Shell(Cmd):
             print(".",end=" ")
         newdoc = dict(db[agent])
         if command not in newdoc['pending_commands']:
+            print(Style.BRIGHT)
             print(Fore.GREEN + "Successfuly executed command")
             print(Style.RESET_ALL)
         else:
