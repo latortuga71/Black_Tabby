@@ -12,9 +12,8 @@ powershell is missing error checking but it seems to be working pretty fine so n
 create C# agent
  
 ##### TO DO ####
-have BlackTabby have a create agent option. where you can provide the type,ip and server
+have BlackTabby have a create agent option. where you can provide the type,ip and server and use pyinstaller to create the elf binary
 Create dropper (could be powershell/vbscript) that downloads agent and adds Persistence to agent via registry. => windows
-Add jwt token secret key input to server.py
 create dropper bash script that downloads python agent elf(compile with pyinstaller) and adds persistence to agent => linux
 Remove printing of output on agent and server
 Create dropper exe that downloads agent and adds Persistence to agent. => windows
