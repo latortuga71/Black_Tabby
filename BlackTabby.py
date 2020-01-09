@@ -13,7 +13,7 @@ import time
 class Client(object):
 	def cat_banner(self):
 		print(Style.BRIGHT)
-		print(Fore.MAGENTA + '''
+		print(Fore.RED + '''
 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmhhyhdmNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNy:``  ``.+dNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
 NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNm/          .yNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
@@ -76,7 +76,7 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 	    print("\n\n")
 	    result = pyfiglet.figlet_format("BlackTabby", font = "gothic") # lean/alligator/hollywood/gothic
 	    print(Style.BRIGHT)
-	    print(Fore.MAGENTA + result)
+	    print(Fore.RED + result)
 	    print(Style.RESET_ALL)
 
 	def connect_database(self):
@@ -104,7 +104,7 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 		    }
 		]
 
-		answers = prompt(questions, style=custom_style_3)
+		answers = prompt(questions, style=custom_style_1)
 		#print(answers)
 		print(Style.RESET_ALL)
 		self.couchserver = couchdb.Server("http://{}:{}@{}:{}".format(answers['username'],answers['password'],answers['ip'],answers['port']))
@@ -161,7 +161,7 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 	                'List Agents',
 	                'Connect To Agent',
 	                'Delete Agent',
-	                'Dump DB',
+	                'Create Agent',
 	                'Exit'
 	            ]
 	        }
@@ -188,7 +188,7 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 	        "List Agents": self.list_slaves,
 	        "Connect To Agent": self.cmd_slave,
 	        "Delete Agent": self.del_agent,
-	        "Wipe DB": self.dump_db,
+	        "Create Agent": self.create_agent,
 	        "Exit": self.exit
 	    }
 	    # Get the function from switcher dictionary
@@ -225,10 +225,10 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 
 	def cmd_slave(self):
 		if self.list_slaves():		
-			print(self.agent_list)
+			#print(self.agent_list)
 			questions = [{'type':'list','name':'agent_listing','message':'choose agent','choices':self.agent_list}]	
 			answers = prompt(questions,style=custom_style_3)
-			print(answers)
+			#print(answers)
 			self.agent_id = answers['agent_listing']
 			self.controlling_agent(self.agent_id)
 			return self.agent_id
@@ -237,7 +237,7 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 
 
 	def controlling_agent(self,agent_id):
-		print(agent_id)
+		#print(agent_id)
 		shell = Shell() ### check shell.py
 		shell.agent_id = agent_id
 		shell.db_connection = self.db
@@ -262,8 +262,13 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 
 
 
-	def dump_db(self):
-		print("deleting database")
+	def create_agent(self):
+		questions = {'type':'list',
+					 'name':'Section',
+					 'message': 'Choose an agent to build',
+					 'choices':['Python (Linux Elf)','Windows PowerShell']}
+		answers = prompt(questions, style=custom_style_1)
+		print("Creating Agent..")
 
 	def exit(self):
 		print(Style.RESET_ALL)

