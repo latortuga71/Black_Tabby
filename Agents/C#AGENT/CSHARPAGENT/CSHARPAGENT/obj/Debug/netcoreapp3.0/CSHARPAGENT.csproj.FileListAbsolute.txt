@@ -1,0 +1,14 @@
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\bin\Debug\netcoreapp3.0\CSHARPAGENT.exe
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\bin\Debug\netcoreapp3.0\CSHARPAGENT.deps.json
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\bin\Debug\netcoreapp3.0\CSHARPAGENT.runtimeconfig.json
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\bin\Debug\netcoreapp3.0\CSHARPAGENT.runtimeconfig.dev.json
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\bin\Debug\netcoreapp3.0\CSHARPAGENT.dll
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\bin\Debug\netcoreapp3.0\CSHARPAGENT.pdb
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\obj\Debug\netcoreapp3.0\CSHARPAGENT.csprojAssemblyReference.cache
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\obj\Debug\netcoreapp3.0\CSHARPAGENT.AssemblyInfoInputs.cache
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\obj\Debug\netcoreapp3.0\CSHARPAGENT.AssemblyInfo.cs
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\obj\Debug\netcoreapp3.0\CSHARPAGENT.dll
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\obj\Debug\netcoreapp3.0\CSHARPAGENT.pdb
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\bin\Debug\netcoreapp3.0\RestSharp.dll
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\obj\Debug\netcoreapp3.0\CSHARPAGENT.csproj.CopyComplete
+C:\Users\chris\Desktop\C#AGENT\CSHARPAGENT\CSHARPAGENT\bin\Debug\netcoreapp3.0\Newtonsoft.Json.dll
