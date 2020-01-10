@@ -13,18 +13,10 @@ create C# agent
 have BlackTabby have a create agent option. where you can provide the type,ip and server and use pyinstaller to create the elf binary
 
 ##### TO DO ####
+Add error handling to powershell agent with try catch so when agent is deleted via blacktabby cli when server error 400 or 500 occurs agent exits immediately
 Create dropper (could be powershell/vbscript) that downloads agent and adds Persistence to agent via registry. => windows
 create dropper bash script that downloads python agent elf(compile with pyinstaller) and adds persistence to agent => linux
 Remove printing of output on agent and server
 Create dropper exe that downloads agent and adds Persistence to agent. => windows
 Add DNS Functionality to agents
 
-MAIN AGENTS WILL BE
-linux => python/python elf
-windows => powershell/C# exe
-
-### NOTES ####
-C# works but it compiles as an EXE, running it fileless via powershell might be more stealthy
-or as a dll perhaps(add a scheduled task maybe?)
-powershell agent can be run fileless via downloadString powershell commmand doesnt trigger antivirus (dropper adds persistence via registry perhaps)
-python agent can be converted to linux binary via pyinstaller (dropper bash script add to cron for persistence)
