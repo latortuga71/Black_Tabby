@@ -9,6 +9,8 @@ import sys
 from shell import Shell
 import requests
 import time
+import subprocess
+import PyInstaller
 
 class Client(object):
 	def cat_banner(self):
@@ -268,7 +270,40 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 					 'message': 'Choose an agent to build',
 					 'choices':['Python (Linux Elf)','Windows PowerShell']}
 		answers = prompt(questions, style=custom_style_1)
-		print("Creating Agent..")
+		print(answers['Section'])
+		if (answers['Section'] == 'Windows PowerShell'):
+			print("Editing Windows PowerShell Agent")
+
+
+
+		elif (answers['Section'] == 'Python (Linux Elf)'):
+			ip_port_question = [{
+			'type':'input',
+			'name':'ip',
+			'message':'Enter IP or Hostname in the folowing format  90.80.70.60 or chrisja.info'},
+			{
+			'type':'input',
+			'name':'port',
+			'message':'Enter Port'
+
+			}]
+			answers2 = prompt(ip_port_question, style=custom_style_1)
+			print('Editing Python Agent and compiling into ELF')
+			with open('Agents/agent.py','r') as f:
+				data = f.readlines()
+			f.close()
+			new_url = "https://{}:{}/".format(answers2['ip'],answers2['port'])
+			data[11] = "url = \"{}\"\n".format(new_url)
+			with open("Agents/Created_Agents/Agent.py",'w') as f:
+				f.writelines(data)
+			f.close()
+			print(Style.BRIGHT)
+			print(Fore.GREEN + "*** Produced New Agent.py file... ***")
+			print(Fore.GREEN + "*** File Written to Agents/Created_Agents/Agent.py... ***")
+			print(Fore.GREEN + "*** Run pyinstaller Agent.py to produce ELF... ***")
+			print(Style.RESET_ALL)
+
+
 
 	def exit(self):
 		print(Style.RESET_ALL)
