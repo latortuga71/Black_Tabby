@@ -10,9 +10,9 @@ echo "Enter Password for CouchDB Admin"
 read -s CouchPass
 echo "Enter a JWT Secret Key"
 read -s JWT
-echo "Enter the User-Agent Secret"
+echo "Enter the User-Agent Secret (Save this as it is needed when creating Agents!)"
 read UA
-echo "Enter the Agent Secret"
+echo "Enter the Agent Secret (Save this as it is needed when creating Agents!)"
 read ASecret
 curl -X POST -H "Content-Type: application/json" http://localhost:5984/_cluster_setup -d '{"action": "enable_single_node", "bind_address":"0.0.0.0", "username": "'$CouchUser'", "password":"'$CouchPass'"}'
 echo "Run BlackTabby.py to create the DB and view and begin deploying agents"

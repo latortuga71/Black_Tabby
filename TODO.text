@@ -14,9 +14,8 @@ have BlackTabby have a create agent option. where you can provide the type,ip an
 Add error handling to powershell agent with try catch so when agent is deleted via blacktabby cli when server error 400 or 500 occurs agent exits immediately
 Create dropper (could be powershell/vbscript) that downloads agent and adds Persistence to agent via registry. => windows
 Remove printing of output on agent and server
+added asking for headers secrets for authentication on setup and when creating agents
 
 ##### TO DO ####
-create dropper bash script that downloads python agent elf(compile with pyinstaller) and adds persistence to agent => linux
-Create dropper exe that downloads agent and adds Persistence to agent. => windows
 Add DNS Functionality to agents
 
