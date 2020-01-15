@@ -26,31 +26,17 @@ so they can authenticate to your flask server. Which in turn communicates to the
 
 ![](https://github.com/latortuga71/Black_Tabby/blob/master/setup1.JPG)
 
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+After that has successfully completed run the following command
 ```
-Give an example
+python3 BlackTabby.py
 ```
+You will be asked for the credentials provided as well as the ip address and port that the CouchDB container is running on which should be 127.0.0.1 5984 unless you set this up to run on a different server that the CLI interface will be running on. This will create a view in CouchDB that is neccesary for the CLI to function properly.
 
-### And coding style tests
+## Creating Agents
 
-Explain what these tests test and why
+There is an option on the CLI that allows you to create agents, it will ask you for the ip address and port it will be connecting to. In this case you do not enter the port 5984 which is CouchDB you would enter 9000 which is the flask server.
+So if you are running the CLI and Server on same host, you would enter 127.0.0.1 and port 9000. After you will be asked for the two secrets specified during the bash setup script.
 
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
 
 ## Built With
 
