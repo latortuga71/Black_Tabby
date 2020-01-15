@@ -24,7 +24,7 @@ Then you will be asked to set the username & password for the CouchDB container 
 It will also ask you for two secrets, a user-agent secret and an agent secret, these are very importing and are used when creating agents
 so they can authenticate to your flask server. Which in turn communicates to the CouchDB container
 
-![](setup1.jpg)
+![](https://github.com/latortuga71/Black_Tabby/blob/master/setup1.JPG)
 
 End with an example of getting some data out of the system or using it for a little demo
 
