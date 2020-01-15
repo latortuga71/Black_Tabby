@@ -24,7 +24,7 @@ Then you will be asked to set the username & password for the CouchDB container 
 It will also ask you for two secrets, a user-agent secret and an agent secret, these are very importing and are used when creating agents
 so they can authenticate to your flask server. Which in turn communicates to the CouchDB container
 
-![](https://github.com/latortuga71/Black_Tabby/blob/master/setup1.JPG)
+![](https://github.com/latortuga71/Black_Tabby/blob/master/setup.JPG)
 
 After that has successfully completed run the following command
 ```
@@ -37,6 +37,20 @@ You will be asked for the credentials provided as well as the ip address and por
 There is an option on the CLI that allows you to create agents, it will ask you for the ip address and port it will be connecting to. In this case you do not enter the port 5984 which is CouchDB you would enter 9000 which is the flask server.
 So if you are running the CLI and Server on same host, you would enter 127.0.0.1 and port 9000. After you will be asked for the two secrets specified during the bash setup script.
 
+## Agent CLI (Work in progress)
+
+Once you have connected to an agent just enter ? to see a list of options
+execute followed by a command will run a command and return the result
+```
+execute cmd
+```
+get_all will return the full database document for that agent
+and export json will write the json to a file.
+```
+export_json /tmp/json_output.txt
+```
+
+![](https://github.com/latortuga71/Black_Tabby/blob/master/setup3.JPG)
 
 ## Built With
 
