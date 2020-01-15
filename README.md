@@ -68,7 +68,7 @@ export_json /tmp/json_output.txt
 ![](https://github.com/latortuga71/Black_Tabby/blob/master/setup3.JPG)
 
 ## Does it trigger antivirus tho?
-No as far as i know the powershell and c# agents themselves dont trigger defender.
+As far as i know, the powershell and c# agents themselves dont trigger defender.
 
 
 ## Built With
