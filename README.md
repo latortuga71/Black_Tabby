@@ -40,12 +40,12 @@ So if you are running the CLI and Server on same host, you would enter 127.0.0.1
 ## Agent CLI (Work in progress)
 
 Once you have connected to an agent just enter ? to see a list of options
-execute followed by a command will run a command and return the result
+* execute followed by a command will run a command and return the result
 ```
 execute cmd
 ```
-get_all will return the full database document for that agent
-and export json will write the json to a file.
+* get_all will return the full database document for that agent
+* export json will write the json to a file.
 ```
 export_json /tmp/json_output.txt
 ```
