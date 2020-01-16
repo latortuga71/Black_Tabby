@@ -94,8 +94,8 @@ Will write out full explanation eventually on blog for now below diagram is pret
 Agent -> Flask ---> CouchDB
  ^           |
  |           |
- |   	      V
- |   	      V
+ |   	     V
+ |   	     V
  ^           |
  |           |
  | <----------
