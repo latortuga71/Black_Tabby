@@ -87,13 +87,18 @@ As far as i know, the powershell and c# agents themselves dont trigger defender.
 ## Full Explanation eventually
 
 Will write out full explanation eventually on blog for now below diagram is pretty good.
+```
 
            ------------ 
            V           |
 Agent -> Flask ---> CouchDB
-    	   |            
- ^   	   V
- | <--------
+ ^            |
+ |            |
+ |   	   |            
+ |   	   V
+ | <----------
+
+```
 
 
 
