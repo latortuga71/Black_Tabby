@@ -1,6 +1,14 @@
 # Black Tabby
 
 Black Tabby is a Command & Control Server written in Python with agents written in python, powershell, C#
+
+
+
+
+
+
+
+
 ### Prerequisites
 ```
 Docker
@@ -68,7 +76,7 @@ export_json /tmp/json_output.txt
 ## Does it trigger antivirus tho?
 As far as i know, the powershell and c# agents themselves dont trigger defender.
 
-## Backend explained
+## Full Explanation eventually
 Couchdb docker container
 Flask as intermediary 
 Agents as whatever
