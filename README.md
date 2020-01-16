@@ -14,6 +14,14 @@ Black Tabby is a Command & Control Server written in Python with agents written 
 Docker
 Python3
 ```
+
+### Quick Setup
+
+![](https://asciinema.org/a/SeczUZSRttACRtMebp6S1iErA)
+
+After Run BlackTabby.py to create the CouchDB View
+
+
 ### Setup
 
 After docker and python3 is on your machine all you need to do is clone this repo and run the setup.sh file
