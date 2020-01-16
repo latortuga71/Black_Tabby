@@ -1,8 +1,6 @@
 # Black Tabby
 
-Black Tabby is a quick C2 Server i created using Python Flask and CouchDB 
-the motivation behind this project was to learn more about noSQL databases as well as how C2 server's work on the back end. I ended up learning about JWT as well as thats how the agents keep tokens fresh. 
-
+Black Tabby is a Command & Control Server written in Python with agents written in python, powershell, C#
 ### Prerequisites
 ```
 Docker
