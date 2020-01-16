@@ -17,7 +17,7 @@ Python3
 
 ### Quick Setup
 
-![](https://asciinema.org/a/SeczUZSRttACRtMebp6S1iErA)
+[![asciicast](https://asciinema.org/a/SeczUZSRttACRtMebp6S1iErA.svg)](https://asciinema.org/a/SeczUZSRttACRtMebp6S1iErA)
 
 After Run BlackTabby.py to create the CouchDB View
 
