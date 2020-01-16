@@ -3,7 +3,7 @@
 Black Tabby is a Command & Control Server written in Python with agents written in python, powershell, C#
 
 
-
+[![asciicast](https://asciinema.org/a/Cd53d45U1azyUZvlcbGdnOxDv.svg)](https://asciinema.org/a/Cd53d45U1azyUZvlcbGdnOxDv)
 
 
 
