@@ -68,5 +68,8 @@ export_json /tmp/json_output.txt
 ## Does it trigger antivirus tho?
 As far as i know, the powershell and c# agents themselves dont trigger defender.
 
-
+## Backend explained
+Couchdb docker container
+Flask as intermediary 
+Agents as whatever
 
