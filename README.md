@@ -85,7 +85,15 @@ export_json /tmp/json_output.txt
 As far as i know, the powershell and c# agents themselves dont trigger defender.
 
 ## Full Explanation eventually
-Couchdb docker container
-Flask as intermediary 
-Agents as whatever
+
+Will write out full explanation eventually on blog for now below diagram is pretty good.
+
+           ------------ 
+           V           |
+Agent -> Flask ---> CouchDB
+    	   |            
+ ^   	   V
+ | <--------
+
+
 
