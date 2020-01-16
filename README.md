@@ -92,11 +92,15 @@ Will write out full explanation eventually on blog for now below diagram is pret
            ------------ 
            V           |
 Agent -> Flask ---> CouchDB
- ^            |
- |            |
- |   	   |            
- |   	   V
+ ^           |
+ |           |
+ |   	  |
+ |   	  V
  | <----------
+
+
+
+
 
 ```
 
