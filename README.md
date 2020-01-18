@@ -47,6 +47,9 @@ python3 BlackTabby.py
 You will be asked for the credentials provided as well as the ip address and port that the CouchDB container is running on which should be 127.0.0.1 5984 unless you set this up to run on a different server than the CLI interface will be running on. This will create a view in CouchDB that is neccesary for the CLI to function properly.
 
 ## CouchDB Container Security (Incomplete)
+
+Immediately after running blacktabby and creating the database, go to the futon login and in the settings change the below parameters to true. Server.py should still be using admin credentials created at setup time so this should have no effect on agents.
+
 ```
 When this option is set to true, no requests are allowed from anonymous users. Everyone must be authenticated.
 
@@ -56,7 +59,6 @@ require_valid_user = false
 [couch_httpd_auth]
 require_valid_user = false
 ```
-so far no security will work on implementing above within server.py
 
 ## Agents
 So far the only agents that can be created through the CLI are python and powershell, i wrote a C# agent that has my loopback hardcoded, as well as the agent secrets if this is edited to suite anyones needs then it can also be used. The C# source folder is [Here](https://github.com/latortuga71/Black_Tabby/tree/master/Agents/C%23AGENT/CSHARPAGENT)
