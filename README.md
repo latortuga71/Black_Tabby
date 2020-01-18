@@ -46,7 +46,7 @@ python3 BlackTabby.py
 ```
 You will be asked for the credentials provided as well as the ip address and port that the CouchDB container is running on which should be 127.0.0.1 5984 unless you set this up to run on a different server than the CLI interface will be running on. This will create a view in CouchDB that is neccesary for the CLI to function properly.
 
-## CouchDB Container Security (Incomplete)
+## CouchDB Container Security
 
 Immediately after running blacktabby and creating the database, go to the futon login and in the settings change the below parameters to true. Server.py should still be using admin credentials created at setup time so this should have no effect on agents.
 
