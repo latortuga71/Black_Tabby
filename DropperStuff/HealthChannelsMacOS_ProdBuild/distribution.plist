@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<installer-gui-script minSpecVersion="1">
+    <title>HealthChannels Mac</title>
+    <background file="rsz_1logo.png" alignment="bottomleft" scaling="none"/>
+    <welcome file="welcome.html" uti="utf-8" mime-type="text/html" />
+    <pkg-ref id="com.company.HealthChannels"/>
+    <options customize="never" require-scripts="false"/>
+    <choices-outline>
+        <line choice="default">
+            <line choice="com.company.HealthChannels"/>
+        </line>
+    </choices-outline>
+    <choice id="default"/>
+    <choice id="com.company.HealthChannels" visible="true">
+        <pkg-ref id="com.company.HealthChannels"/>
+    </choice>
+    <choice title="HealthChannelsAgentInstaller">
+    </choice>
+    <pkg-ref id="com.company.HealthChannels" version="0" onConclusion="none">HealthChannelsMac.pkg</pkg-ref>
+</installer-gui-script>
