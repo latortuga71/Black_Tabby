@@ -5,7 +5,7 @@ chardet==3.0.4
 Click==7.0
 colorama==0.4.3
 CouchDB==1.2
-cryptography==2.8
+cryptography==3.2
 Flask==1.1.1
 Flask-JWT==0.3.2
 Flask-JWT-Extended==3.24.1
